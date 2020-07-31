@@ -1,3 +1,25 @@
 module.exports = {
-  lintOnSave: false
-}
+  lintOnSave: false,
+  chainWebpack: (config) => {
+    // GraphQL Loader
+    const svgRule = config.module.rule("svg");
+
+    svgRule.uses.clear();
+
+    svgRule
+      .use("svg-sprite-loader")
+      .loader("svg-sprite-loader")
+      .end()
+      .use("svgo-loader")
+      .loader("svgo-loader")
+      .options({
+        plugins: [
+          {
+            removeAttrs: {
+              attrs: "fill",
+            },
+          },
+        ],
+      });
+  },
+};
