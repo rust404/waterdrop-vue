@@ -2,15 +2,15 @@
   <nav class="nav-bar">
     <router-link class="nav-bar-item" to="/record/detail">
       <Icon class="nav-bar-icon" name="detail"/>
-      detail
+      明细
     </router-link>
     <router-link class="nav-bar-item" to="/record/add">
       <Icon class="nav-bar-icon" name="money"/>
-      add
+      记一笔
     </router-link>
     <router-link class="nav-bar-item" to="/statistics">
       <Icon class="nav-bar-icon" name="statistics"/>
-      statistics
+      数据
     </router-link>
   </nav>
 </template>

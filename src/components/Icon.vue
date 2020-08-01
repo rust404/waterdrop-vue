@@ -1,5 +1,9 @@
 <template>
-  <svg viewBox="0 0 1024 1024" class="icon">
+  <svg
+    viewBox="0 0 1024 1024"
+    class="icon"
+    :style="{width: size+'px', height: size + 'px'}"
+  >
     <use :xlink:href="'#'+name" />
   </svg>
 </template>
@@ -15,6 +19,7 @@ importAll(require.context("../assets/icon", true, /\.svg$/));
 @Component
 export default class Icon extends Vue {
   @Prop() readonly name!: string;
+  @Prop() readonly size!: number;
 }
 </script>
 

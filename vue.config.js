@@ -1,5 +1,6 @@
 module.exports = {
   lintOnSave: false,
+  transpileDependencies: ["vuex-module-decorators"],
   chainWebpack: (config) => {
     // GraphQL Loader
     const svgRule = config.module.rule("svg");

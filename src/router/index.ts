@@ -9,7 +9,7 @@ import NotFound from "@/views/NotFound.vue";
 import Statistics from "@/views/Statistics.vue";
 
 Vue.use(VueRouter);
-const EmptyContainer = {
+const RouterViewContainer = {
   render(h: Vue.CreateElement) {
     return h("router-view");
   },
@@ -18,7 +18,7 @@ const EmptyContainer = {
 const routes: Array<RouteConfig> = [
   {
     path: "/record",
-    component: EmptyContainer,
+    component: RouterViewContainer,
     children: [
       {
         path: "detail",
@@ -36,7 +36,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/catagory",
-    component: EmptyContainer,
+    component: RouterViewContainer,
     children: [
       {
         path: "edit",

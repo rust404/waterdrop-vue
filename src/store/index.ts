@@ -1,15 +1,17 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex, { StoreOptions } from "vuex";
 
-Vue.use(Vuex)
+import { catagory } from "./modules/catagory";
+import { record } from "./modules/record";
 
-export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+Vue.use(Vuex);
+
+const store: StoreOptions<{}> = {
+  state: {},
   modules: {
-  }
-})
+    catagory,
+    record,
+  },
+};
+
+export default new Vuex.Store(store);

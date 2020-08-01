@@ -10,6 +10,9 @@
   padding: 0;
 }
 
+* {
+}
+
 ul,
 ol {
   list-style: none;
@@ -31,6 +34,7 @@ body {
     SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
   font-size: $font-base-size;
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 .clearfix::after {
   content: "";

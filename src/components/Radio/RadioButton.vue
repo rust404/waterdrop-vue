@@ -6,7 +6,9 @@
       :value="label"
       v-model="value"
     >
-    <span class="radio-button-text">{{label}}</span>
+    <span class="radio-button-text">
+      <slot>{{label}}</slot>
+    </span>
   </label>
 </template>
 

@@ -30,6 +30,10 @@ export default {
   main {
     flex: 1;
     overflow: auto;
+    /* 处理子元素的溢出问题 */
+    /* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336  */
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>
