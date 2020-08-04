@@ -13,9 +13,12 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: "Layout"
-};
+import {Component, Vue} from 'vue-property-decorator'
+
+@Component
+export default class Layout extends Vue {
+
+}
 </script>
 
 <style lang="scss" scoped>

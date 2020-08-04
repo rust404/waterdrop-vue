@@ -1,5 +1,5 @@
 module.exports = {
-  lintOnSave: false,
+  //lintOnSave: false,
   transpileDependencies: ["vuex-module-decorators"],
   chainWebpack: (config) => {
     // GraphQL Loader

@@ -144,7 +144,7 @@ export default class RecordAdd extends Vue {
         this.handleClear()
         break
       case 'date':
-        this.handleDate()
+        // this.handleDate()
         break
       case '.':
         this.handleDot()

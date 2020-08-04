@@ -1,0 +1,27 @@
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 300ms;
+}
+
+$map: (
+  top: "0, -100%",
+  left: "-100%, 0",
+  right: "100%, 0",
+  bottom: "0, 100%"
+);
+
+@each $direction, $translate in $map {
+  .slide-from-#{$direction}-enter,
+  .slide-from-#{$direction}-leave-to {
+    transform: translate(#{$translate});
+  }
+  .slide-from-#{$direction}-enter-active,
+  .slide-from-#{$direction}-leave-active {
+    transition: transform 300ms;
+  }
+}

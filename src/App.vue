@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts">
-import NavBar from "@/components/NavBar.vue";
 export default {
   name: 'App'
 };
@@ -13,6 +12,7 @@ export default {
 
 <style lang="scss">
 @import "~@/style/reset.scss";
+@import "~@/style/animation.scss";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
