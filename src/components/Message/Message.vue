@@ -1,7 +1,6 @@
 <template>
   <div class="message-wrapper">
     <transition-group
-      @before-enter="beforeEnter"
       @enter="enter"
       @leave="leave"
       :duration="300"

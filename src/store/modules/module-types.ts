@@ -1,4 +1,4 @@
-export interface Catagory {
+export interface Category {
   name: string;
   icon: string;
   id: number;
@@ -10,13 +10,13 @@ export type MoneyType = "income" | "expenditure";
 export interface MoneyRecord {
   time: string;
   moneyType: MoneyType;
-  catagoryId: number;
+  categoryId: number;
   id: number;
   amount: number;
 }
 
-export interface CatagoryState {
-  catagoryList: Catagory[];
+export interface CategoryState {
+  categoryList: Category[];
 }
 
 export interface MoneyRecordState {

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex, { StoreOptions } from "vuex";
 
-import { catagory } from "./modules/catagory";
+import { category } from "./modules/category";
 import { record } from "./modules/record";
 
 Vue.use(Vuex);
@@ -9,7 +9,7 @@ Vue.use(Vuex);
 const store: StoreOptions<{}> = {
   state: {},
   modules: {
-    catagory,
+    category,
     record,
   },
 };

@@ -35,7 +35,7 @@ export default class NumberPad extends Vue {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 @import '~@/style/variable';
 $gap: 10px;
 .number-pad {

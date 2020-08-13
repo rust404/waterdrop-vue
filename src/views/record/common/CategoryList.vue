@@ -1,15 +1,15 @@
 <template>
-  <ul class="catagory-list">
+  <ul class="category-list">
     <li
-      :class="listItemClassName(catagory)"
-      v-for="catagory in listData"
-      :key="catagory.id"
-      @click="handleClick(catagory.id)"
+      :class="listItemClassName(category)"
+      v-for="category in listData"
+      :key="category.id"
+      @click="handleClick(category.id)"
     >
-      <div class="catagory-icon-wrapper">
-        <Icon :size="30" class="catagory-icon" :name="catagory.icon" />
+      <div class="category-icon-wrapper">
+        <Icon :size="30" class="category-icon" :name="category.icon" />
       </div>
-      {{catagory.name}}
+      {{category.name}}
     </li>
   </ul>
 </template>
@@ -21,7 +21,7 @@ import classNames from 'classnames';
 
 type MoneyType = 'income' | 'expenditure';
 
-export interface Catagory {
+export interface Category {
   name: string;
   icon: string;
   id: number;
@@ -33,13 +33,13 @@ export interface Catagory {
     Icon,
   }
 })
-export default class CatagoryList extends Vue {
-  @Model('change', { type: Number }) readonly selectedCatagoryId!: number;
-  @Prop() readonly listData!: Catagory[];
+export default class CategoryList extends Vue {
+  @Model('change', { type: Number }) readonly selectedCategoryId!: number;
+  @Prop() readonly listData!: Category[];
 
-  listItemClassName(catagory: Catagory) {
-    return classNames('catagory-list-item', {
-      'is-active': this.selectedCatagoryId === catagory.id
+  listItemClassName(category: Category) {
+    return classNames('category-list-item', {
+      'is-active': this.selectedCategoryId === category.id
     })
   }
   handleClick(id: number) {
@@ -48,22 +48,22 @@ export default class CatagoryList extends Vue {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 @import '~@/style/variable';
 $gap: 20px;
-.catagory-list {
+.category-list {
   display: flex;
   flex-wrap: wrap;
   padding: $gap / 2;
   align-items: flex-start;
-  .catagory-list-item {
+  .category-list-item {
     width: calc((100vw - #{$gap * 6}) / 5);
     margin: $gap / 2;
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: center;
-    .catagory-icon-wrapper {
+    .category-icon-wrapper {
       width: 100%;
       height: calc((100vw - #{$gap * 6}) / 5);
       display: flex;
@@ -73,9 +73,9 @@ $gap: 20px;
       background-color: $grey-2;
       margin-bottom: 6px;
     }
-    &.is-active .catagory-icon-wrapper {
+    &.is-active .category-icon-wrapper {
       background-color: $brand-color;
-      .catagory-icon {
+      .category-icon {
         fill: $grey-2;
       }
     }

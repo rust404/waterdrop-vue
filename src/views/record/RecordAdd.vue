@@ -11,8 +11,8 @@
     <template v-slot:footer>
       <nav-bar></nav-bar>
     </template>
-    <div class="catagory-list-wrapper">
-      <catagory-list v-model="selectedId" :listData="catagoryState.catagoryList"/>
+    <div class="category-list-wrapper">
+      <category-list v-model="selectedId" :listData="categoryState.categoryList"/>
       {{JSON.stringify(recordState.recordList)}}
     </div>
     <div class="control-panel">
@@ -30,10 +30,10 @@ import Icon from "@/components/Icon.vue";
 import TopBar from "@/components/TopBar.vue";
 import RadioButton from "@/components/Radio/RadioButton.vue";
 import RadioGroup from "@/components/Radio/RadioGroup.vue";
-import CatagoryList from "./common/CatagoryList.vue";
+import CategoryList from "./common/CategoryList.vue";
 import NumberPad from "./common/NumberPad.vue";
 import CalcStrBar from "./common/CalcStrBar.vue";
-import {MoneyType, CatagoryState, MoneyRecordState} from '@/store/modules/module-types';
+import {MoneyType, CategoryState, MoneyRecordState} from '@/store/modules/module-types';
 
 import {
   State,
@@ -52,7 +52,7 @@ type NumberPadHandlerVal = Operator | NumberStr | 'submit' | 'date' | 'clear'|'.
     TopBar,
     RadioButton,
     RadioGroup,
-    CatagoryList,
+    CategoryList,
     NumberPad,
     CalcStrBar,
   },
@@ -63,7 +63,7 @@ export default class RecordAdd extends Vue {
   right = ''
   operator = ''
   selectedId = -1
-  @State('catagory') catagoryState!: CatagoryState
+  @State('category') categoryState!: CategoryState
   @State('record') recordState!: MoneyRecordState
   @Mutation('record/add') addRecord!: Function
 
@@ -122,7 +122,7 @@ export default class RecordAdd extends Vue {
     console.log(this.selectedId, this.moneyType, this.calcStr)
     this.addRecord({
       moneyType: this.moneyType,
-      catagoryId: this.selectedId,
+      categoryId: this.selectedId,
       amount: +this.calcStr
     })
   }
@@ -160,7 +160,7 @@ export default class RecordAdd extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.catagory-list-wrapper {
+.category-list-wrapper {
   flex: 1;
   overflow: auto;
 }
