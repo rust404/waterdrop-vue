@@ -3,8 +3,8 @@ import VueRouter, { RouteConfig } from "vue-router";
 import RecordAdd from "@/views/record/RecordAdd.vue";
 import RecordDetail from "@/views/record/RecordDetail.vue";
 import RecordEdit from "@/views/record/RecordEdit.vue";
-import CatagoryAdd from "@/views/catagory/CatagoryAdd.vue";
-import CatagoryEdit from "@/views/catagory/CatagoryEdit.vue";
+import CategoryAdd from "@/views/catagory/CategoryAdd.vue";
+import CategoryEdit from "@/views/catagory/CategoryEdit.vue";
 import NotFound from "@/views/NotFound.vue";
 import Statistics from "@/views/Statistics.vue";
 
@@ -40,11 +40,11 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: "edit",
-        component: CatagoryEdit,
+        component: CategoryEdit,
       },
       {
         path: "add",
-        component: CatagoryAdd,
+        component: CategoryAdd,
       },
     ],
   },

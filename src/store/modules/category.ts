@@ -15,6 +15,12 @@ const state: CategoryState = {
       id: 2,
       moneyType: "expenditure",
     },
+    {
+      name: "理财",
+      icon: "licai",
+      id: 3,
+      moneyType: "income",
+    },
   ],
 };
 

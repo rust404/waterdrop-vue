@@ -3,7 +3,7 @@
     <transition-group
       @enter="enter"
       @leave="leave"
-      :duration="300"
+      :duration="animateDuration"
     >
       <div
         :class="messageClass(m.type)"
@@ -26,6 +26,7 @@ import {MessageItem, MessageType,  MessageOption} from './message-types';
 @Component
 export default class Message extends Vue {
   messages: MessageItem[] = []
+  animateDuration = 200
   messageClass(type: MessageType) {
     return classNames('message-item', {
       [type]: type
@@ -34,7 +35,7 @@ export default class Message extends Vue {
   enter(el: HTMLElement) {
     const height = el.getBoundingClientRect().height
     el.style.height = '0px'
-    el.style.transition = "height 300ms"
+    el.style.transition = `height ${this.animateDuration}ms`
     setTimeout(() => {
      el.style.height = height + 'px'
     }, 0)
@@ -42,7 +43,7 @@ export default class Message extends Vue {
   leave(el: HTMLElement) {
     el.style.height = '0px'
   }
-  addMessage({type, message, duration = 3000}: MessageOption) {
+  addMessage({type, message, duration = 2000}: MessageOption) {
     const item = {
       type,
       message,

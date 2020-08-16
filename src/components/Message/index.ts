@@ -10,8 +10,8 @@ export default {
     // eslint-disable-next-line
     const instance = new Vue(Message).$mount(container) as any; // TODO
 
-    Vue.prototype.$message = function({ type, message }: MessageOption) {
-      instance.addMessage({ type, message });
+    Vue.prototype.$message = function({ type, message, duration }: MessageOption) {
+      instance.addMessage({ type, message, duration });
     };
   },
 };

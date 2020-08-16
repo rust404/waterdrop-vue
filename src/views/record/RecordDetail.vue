@@ -1,32 +1,210 @@
-  <template>
+<template>
   <layout>
     <template v-slot:footer>
       <nav-bar></nav-bar>
     </template>
-    <div>record detail</div>
-    <div @click="toggle" style="height: 200px; background: blue"></div>
+    <template v-slot:header>
+      <top-bar class="detail-top-bar">收入支出明细</top-bar>
+      <div class="general">
+        <div class="income">
+          <span>{{ getSum(selectedRecords, 'income') }}</span>
+          <span>{{ selectedMonth + 1 }}月收入</span>
+        </div>
+        <div class="time">
+          <span class="month" @click="showDatePicker = true">{{ selectedMonth + 1 }}月&#9660;</span>
+          <span class="year">{{ selectedYear }}年</span>
+        </div>
+        <div class="expenditure">
+          <span>{{ getSum(selectedRecords, 'expenditure') }}</span>
+          <span>{{ selectedMonth + 1 }}月支出</span>
+        </div>
+      </div>
+    </template>
+    <div class="detail">
+      <div class="group-by-date" v-for="(item, index) in dateToRecord" :key="index">
+        <div class="date-record-general">
+          <span class="date">{{ getFormattedDate(item[0]) }}</span>
+          <span class="income">收入：{{ getSum(item[1], 'income') }}</span>
+          <span class="expenditure">支出：{{ getSum(item[1], 'expenditure') }}</span>
+        </div>
+        <ul class="date-record-detail">
+          <li v-for="record in item[1]" :key="record.id">
+              <span class="category-icon-wrapper">
+                <icon class="category-icon" :name="getCategoryIcon(record.categoryId)"/>
+              </span>
+            <span class="category-name">{{ getCategoryName(record.categoryId) }}</span>
+            <span class="amount">{{ record.moneyType === 'expenditure' ? '-' : '' }}{{ record.amount }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <pop-up v-model="showDatePicker" position="bottom">
+      <DatePicker type="year-month" v-model="selectedTime" @ok="showDatePicker = !showDatePicker"/>
+    </pop-up>
   </layout>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import {Vue, Component} from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import NavBar from "@/components/NavBar.vue";
+import TopBar from "@/components/TopBar.vue";
+import PopUp from "@/components/PopUp.vue";
+import Icon from "@/components/Icon.vue";
+import DatePicker from "@/components/DatePicker/DatePicker.vue";
+import dayjs from "dayjs";
+import {State} from "vuex-class";
+import {CategoryState, MoneyRecord, MoneyRecordState, MoneyType} from "@/store/modules/module-types";
 
 @Component({
   components: {
     Layout,
     NavBar,
+    TopBar,
+    PopUp,
+    DatePicker,
+    Icon,
   }
 })
 export default class RecordDetail extends Vue {
-  show = false
-  toggle() {
-    this.$message({
-      type: 'danger',
-      message: "请填入分类"
+  @State('category') categoryState!: CategoryState
+  @State('record') recordState!: MoneyRecordState
+  selectedTime = new Date()
+  showDatePicker = false
+
+  get selectedMonth() {
+    return dayjs(this.selectedTime).month()
+  }
+
+  get selectedYear() {
+    return dayjs(this.selectedTime).year()
+  }
+
+  get selectedRecords() {
+    return this.recordState.recordList.filter(record => {
+      const time = dayjs(record.time)
+      return time.year() === this.selectedYear && time.month() === this.selectedMonth
     })
+  }
+
+  get dateToRecord(): [string, MoneyRecord[]][] {
+    const map = this.selectedRecords.reduce((acc, record) => {
+      const key = dayjs(record.time).format('YYYY-MM-DD')
+      if (Object.prototype.hasOwnProperty.call(acc, key)) {
+        acc[key].push(record)
+      } else {
+        acc[key] = [record]
+      }
+      return acc
+    }, {} as { [index: string]: MoneyRecord[] })
+    return Object.entries(map).sort((a, b) => {
+      const dateA = dayjs(a[0]).date()
+      const dateB = dayjs(b[0]).date()
+      return dateB - dateA
+    })
+  }
+
+  getSum(records: MoneyRecord[], type: MoneyType) {
+    return records.reduce((acc, record) => {
+      if (record.moneyType === type) {
+        acc += record.amount
+      }
+      return acc
+    }, 0)
+  }
+
+  getFormattedDate(date: any) {
+    const str = '日一二三四五六'
+    return dayjs(date).format('M月D日 星期') + str[dayjs(date).day()]
+  }
+
+  getCategoryIcon(id: number) {
+    const category = this.categoryState.categoryList.filter(category => category.id === id)[0]
+    return category ? category.icon : ''
+  }
+
+  getCategoryName(id: number) {
+    const category = this.categoryState.categoryList.filter(category => category.id === id)[0]
+    return category ? category.name : ''
   }
 }
 
 </script>
+
+<style lang="scss" scoped>
+@import "~@/style/variable";
+
+.detail-top-bar {
+  box-shadow: none;
+}
+
+.general {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 16px;
+  .income,
+  .time,
+  .expenditure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > :first-child {
+      font-size: 20px;
+      line-height: 30px;
+    }
+  }
+}
+
+.detail {
+  .group-by-date {
+    .date-record-general {
+      display: flex;
+      font-size: 10px;
+      line-height: 30px;
+      padding: 0 20px;
+      background-color: $grey-2;
+      color: $grey-6;
+
+      .income {
+        margin-left: auto;
+        margin-right: 6px;
+      }
+    }
+
+    .date-record-detail {
+      > li {
+        display: flex;
+        align-items: center;
+        line-height: 30px;
+        padding: 12px 20px;
+
+        .category-icon-wrapper {
+          width: 36px;
+          height: 36px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 18px;
+          background-color: $brand-color;
+
+          .category-icon {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+          }
+        }
+
+        .category-name {
+          margin-left: 10px;
+        }
+
+        .amount {
+          margin-left: auto;
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
+</style>

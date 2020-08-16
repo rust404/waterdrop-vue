@@ -15,18 +15,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Model, Prop } from "vue-property-decorator";
+import {Vue, Component, Model, Prop, Watch} from "vue-property-decorator";
 import Icon from '@/components/Icon.vue';
 import classNames from 'classnames';
+import {Category, MoneyType} from "@/store/modules/module-types";
 
-type MoneyType = 'income' | 'expenditure';
-
-export interface Category {
-  name: string;
-  icon: string;
-  id: number;
-  type: MoneyType;
-}
 
 @Component({
   components: {

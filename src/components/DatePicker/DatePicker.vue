@@ -2,13 +2,13 @@
   <div class="datepicker">
     <div class="date-picker-header">
       <button class="cancel-btn" @click="onCancel">取消</button>
-      <header class="title">{{ `${year}-${month}-${date}` }}</header>
+      <header class="title">{{dateStr}}</header>
       <button class="ok-btn" @click="onOk">确定</button>
     </div>
     <div class="picker-container">
-      <picker-list v-model="year" :list-data="yearList"/>
-      <picker-list v-model="month" :list-data="monthList"/>
-      <picker-list v-model="date" :list-data="dateList"/>
+      <picker-list v-if="showYear" v-model="year" :list-data="yearList"/>
+      <picker-list v-if="showMonth" v-model="month" :list-data="monthList"/>
+      <picker-list v-if="showDate" v-model="date" :list-data="dateList"/>
     </div>
   </div>
 </template>
@@ -18,6 +18,8 @@ import {Vue, Component, Model, Prop} from "vue-property-decorator";
 import dayjs from 'dayjs';
 import PickerList from "@/components/DatePicker/PickerList.vue";
 
+export type DatePickerType = 'full-date' | 'year-month' | 'month-date'
+
 @Component({
   components: {
     PickerList
@@ -26,6 +28,7 @@ import PickerList from "@/components/DatePicker/PickerList.vue";
 export default class DatePicker extends Vue {
   @Model('change', {type: Date}) readonly value!: Date
   @Prop({default: '时间', type: String}) readonly pickerTitle?: string
+  @Prop ({default: 'full-date', type: String}) readonly type?: DatePickerType
 
   year = dayjs(this.value).year()
   // 从 1 开始
@@ -35,10 +38,32 @@ export default class DatePicker extends Vue {
 
   created() {
     const ret = []
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 40; i++) {
       ret.unshift(this.year - i)
     }
     this.yearList = ret
+  }
+
+  get showYear() {
+    return this.type === 'full-date' || this.type === 'year-month'
+  }
+  get showMonth() {
+    return this.type === 'full-date' || this.type === 'year-month' || this.type === 'month-date'
+  }
+  get showDate() {
+    return this.type === 'full-date' || this.type === 'month-date'
+  }
+  get dateStr() {
+    if (this.type === 'full-date') {
+      return `${this.year}-${this.month}-${this.date}`
+    }
+    if (this.type === 'month-date') {
+      return `${this.month}-${this.date}`
+    }
+    if (this.type === 'year-month') {
+      return `${this.year}-${this.month}`
+    }
+    return ''
   }
 
   get daysInMonth() {
@@ -55,10 +80,6 @@ export default class DatePicker extends Vue {
 
   get fullDate() {
     return new Date(dayjs().year(this.year).month(this.month - 1).date(this.date).valueOf())
-  }
-
-  onDateChange() {
-    this.$emit('change', this.fullDate)
   }
 
   onOk() {

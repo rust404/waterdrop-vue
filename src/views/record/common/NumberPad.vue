@@ -3,7 +3,7 @@
     <button class="calc-button" data-type="1">1</button>
     <button class="calc-button" data-type="2">2</button>
     <button class="calc-button" data-type="3">3</button>
-    <button class="date-picker-button" data-type="date">date</button>
+    <button @click="onDateButtonClick" class="date-picker-button" data-type="date">{{dateStr}}</button>
     <button class="calc-button" data-type="4">4</button>
     <button class="calc-button" data-type="5">5</button>
     <button class="calc-button" data-type="6">6</button>
@@ -17,20 +17,44 @@
     <button class="calc-button" data-type="clear">清零</button>
     <button v-if="!showEqual" class="submit-button" data-type="submit">完成</button>
     <button v-if="showEqual" class="equal-button" data-type="getResult">=</button>
+    <pop-up v-model="showDatePicker" position="bottom">
+      <DatePicker v-model="curDate" @ok="showDatePicker = !showDatePicker"/>
+    </pop-up>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
+import PopUp from "@/components/PopUp.vue";
+import DatePicker from "@/components/DatePicker/DatePicker.vue";
+import dayjs from "dayjs";
 
-@Component
+@Component({
+  components: {
+    PopUp,
+    DatePicker
+  }
+})
 export default class NumberPad extends Vue {
   @Prop() showEqual!: boolean
+  curDate = new Date()
+  showDatePicker = false
+
+  get dateStr() {
+    return dayjs(this.curDate).format('YYYY/MM/DD')
+  }
 
   onClick(e: {target: HTMLInputElement}) {
     if (e.target.dataset.type) {
-      this.$emit('change', e.target.dataset['type'])
+      if (e.target.dataset.type === 'submit') {
+        this.$emit('change', e.target.dataset['type'], this.curDate)
+      } else {
+        this.$emit('change', e.target.dataset['type'])
+      }
     }
+  }
+  onDateButtonClick() {
+    this.showDatePicker = true
   }
 }
 </script>
@@ -68,6 +92,9 @@ $gap: 10px;
         color: #000;
         background: #fff;
       }
+    }
+    &.date-picker-button {
+      font-size: 14px;
     }
   }
 }

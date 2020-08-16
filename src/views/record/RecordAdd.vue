@@ -3,8 +3,8 @@
     <template v-slot:header>
       <top-bar>
         <radio-group v-model="moneyType">
-          <radio-button label="income">收入</radio-button>
           <radio-button label="expenditure">支出</radio-button>
+          <radio-button label="income">收入</radio-button>
         </radio-group>
       </top-bar>
     </template>
@@ -12,8 +12,7 @@
       <nav-bar></nav-bar>
     </template>
     <div class="category-list-wrapper">
-      <category-list v-model="selectedId" :listData="categoryState.categoryList"/>
-      {{JSON.stringify(recordState.recordList)}}
+      <category-list v-model="selectedId" :listData="selectedCategoryList"/>
     </div>
     <div class="control-panel">
       <calc-str-bar :calcStr="calcStr"/>
@@ -23,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import {Vue, Component, Watch} from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import NavBar from "@/components/NavBar.vue";
 import Icon from "@/components/Icon.vue";
@@ -69,6 +68,13 @@ export default class RecordAdd extends Vue {
 
   get calcStr() {
     return this.left + this.operator + this.right
+  }
+  get selectedCategoryList() {
+    return this.categoryState.categoryList.filter(item => item.moneyType === this.moneyType)
+  }
+  @Watch('selectedCategoryList')
+  onListChange() {
+    this.selectedId = -1
   }
   getCalcResult() {
     let result = 0
@@ -117,28 +123,44 @@ export default class RecordAdd extends Vue {
       }
     }
   }
-  handleSubmit() {
+  validate() {
+    if (this.selectedId === -1) {
+      this.$message({type: 'warning', message: '分类不能为空'})
+      return false
+    } else if (this.calcStr === '0') {
+      this.$message({type: 'warning', message: '数值不能为0'})
+      return false
+    }
+    return true
+  }
+  handleSubmit(date: Date) {
     this.getCalcResult()
-    console.log(this.selectedId, this.moneyType, this.calcStr)
+    if (!this.validate()) {
+      return
+    }
     this.addRecord({
       moneyType: this.moneyType,
       categoryId: this.selectedId,
-      amount: +this.calcStr
+      amount: +this.calcStr,
+      time: date.toISOString()
     })
+    this.handleClear()
+    this.$message({type: 'success', message: '添加成功', duration: 1000})
+    this.$router.push('/record/detail')
   }
   handleClear() {
     this.left = '0'
     this.right = ''
     this.operator = ''
   }
-  onChange(val: NumberPadHandlerVal) {
+  onChange(val: NumberPadHandlerVal, date?: Date) {
     switch(val) {
       case '+':
       case '-':
         this.handleOperator(val)
         break
       case 'submit':
-        this.handleSubmit()
+        this.handleSubmit(date as Date)
         break
       case 'clear':
         this.handleClear()
