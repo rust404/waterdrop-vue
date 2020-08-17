@@ -26,7 +26,7 @@ const routes: Array<RouteConfig> = [
         component: RecordDetail,
       },
       {
-        path: "edit",
+        path: "edit/:id",
         component: RecordEdit,
       },
       {

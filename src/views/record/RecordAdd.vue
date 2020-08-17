@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Watch} from "vue-property-decorator";
+import {Vue, Component} from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import NavBar from "@/components/NavBar.vue";
 import Icon from "@/components/Icon/Icon.vue";
@@ -71,10 +71,6 @@ export default class RecordAdd extends Vue {
   }
   get selectedCategoryList() {
     return this.categoryState.categoryList.filter(item => item.moneyType === this.moneyType)
-  }
-  @Watch('selectedCategoryList')
-  onListChange() {
-    this.selectedId = -1
   }
   onManageClick() {
     this.$router.push('/category/manage')

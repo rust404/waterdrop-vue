@@ -28,7 +28,7 @@
           <span class="expenditure">支出：{{ getSum(item[1], 'expenditure') }}</span>
         </div>
         <ul class="date-record-detail">
-          <li v-for="record in item[1]" :key="record.id">
+          <li v-for="record in item[1]" :key="record.id" @click="$router.push(`/record/edit/${record.id}`)">
               <span class="category-icon-wrapper">
                 <icon class="category-icon" :name="getCategoryIcon(record.categoryId)"/>
               </span>
@@ -105,12 +105,13 @@ export default class RecordDetail extends Vue {
   }
 
   getSum(records: MoneyRecord[], type: MoneyType) {
-    return records.reduce((acc, record) => {
+    const sum = records.reduce((acc, record) => {
       if (record.moneyType === type) {
         acc += record.amount
       }
       return acc
     }, 0)
+    return sum.toFixed(2).replace(/\.00$/, '')
   }
 
   getFormattedDate(date: any) {

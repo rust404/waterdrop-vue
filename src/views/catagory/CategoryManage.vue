@@ -1,13 +1,7 @@
 <template>
   <layout>
     <template v-slot:header>
-      <top-bar>
-        <template v-slot:left>
-          <button class="back-btn" @click="handleBack">
-            <icon class="back-icon" name="back" />
-            返回
-          </button>
-        </template>
+      <top-bar show-back>
         <radio-group v-model="moneyType">
           <radio-button label="expenditure">支出</radio-button>
           <radio-button label="income">收入</radio-button>
@@ -42,9 +36,6 @@ import {State} from "vuex-class";
 export default class CategoryManage extends Vue {
   moneyType: MoneyType = 'expenditure'
   @State('category') categoryState!: CategoryState
-  handleBack() {
-    this.$router.back()
-  }
   onChange(id: number) {
     this.$router.push(`/category/edit/${id}`)
   }

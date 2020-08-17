@@ -1,13 +1,7 @@
 <template>
   <layout>
     <template v-slot:header>
-      <top-bar>
-        <template v-slot:left>
-          <button class="back-btn" @click="handleBack">
-            <icon class="back-icon" name="back"/>
-            返回
-          </button>
-        </template>
+      <top-bar show-back>
         <template v-slot:right>
           <button class="finished-btn" @click="handleFinished">完成</button>
         </template>
@@ -48,8 +42,8 @@ import {Mutation, State} from "vuex-class";
   }
 })
 export default class CategoryAdd extends Vue {
-  @State('category') categoryState: CategoryState
-  @Mutation('category/add') categoryAdd: Function
+  @State('category') readonly categoryState!: CategoryState
+  @Mutation('category/add') readonly categoryAdd!: Function
   iconList = CATEGORY_ICON_NAMES
   categoryName = ''
   categoryIcon = CATEGORY_ICON_NAMES[0]
@@ -103,12 +97,6 @@ export default class CategoryAdd extends Vue {
 <style lang="scss" scoped>
 @import '~@/style/variable';
 
-.back-btn {
-  color: $grey-5;
-  .back-icon {
-    fill: $grey-5;
-  }
-}
 .finished-btn {
   color: $brand-color;
 }
