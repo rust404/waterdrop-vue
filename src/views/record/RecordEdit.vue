@@ -24,7 +24,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import NavBar from "@/components/NavBar.vue";
-import Icon from "@/components/Icon.vue";
+import Icon from "@/components/Icon/Icon.vue";
 import TopBar from "@/components/TopBar.vue";
 import RadioButton from "@/components/Radio/RadioButton.vue";
 import RadioGroup from "@/components/Radio/RadioGroup.vue";

@@ -12,7 +12,7 @@
       <nav-bar></nav-bar>
     </template>
     <div class="category-list-wrapper">
-      <category-list v-model="selectedId" :listData="selectedCategoryList"/>
+      <category-list type="manage" v-model="selectedId" :listData="selectedCategoryList" @manage="onManageClick"/>
     </div>
     <div class="control-panel">
       <calc-str-bar :calcStr="calcStr"/>
@@ -25,7 +25,7 @@
 import {Vue, Component, Watch} from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import NavBar from "@/components/NavBar.vue";
-import Icon from "@/components/Icon.vue";
+import Icon from "@/components/Icon/Icon.vue";
 import TopBar from "@/components/TopBar.vue";
 import RadioButton from "@/components/Radio/RadioButton.vue";
 import RadioGroup from "@/components/Radio/RadioGroup.vue";
@@ -57,7 +57,7 @@ type NumberPadHandlerVal = Operator | NumberStr | 'submit' | 'date' | 'clear'|'.
   },
 })
 export default class RecordAdd extends Vue {
-  moneyType: MoneyType = 'income'
+  moneyType: MoneyType = 'expenditure'
   left = '0'
   right = ''
   operator = ''
@@ -75,6 +75,9 @@ export default class RecordAdd extends Vue {
   @Watch('selectedCategoryList')
   onListChange() {
     this.selectedId = -1
+  }
+  onManageClick() {
+    this.$router.push('/category/manage')
   }
   getCalcResult() {
     let result = 0

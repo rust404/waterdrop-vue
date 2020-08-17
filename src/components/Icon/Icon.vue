@@ -14,7 +14,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 function importAll(r: __WebpackModuleApi.RequireContext) {
   r.keys().forEach(r);
 }
-importAll(require.context("../assets/icon", true, /\.svg$/));
+importAll(require.context("../../assets/icon", true, /\.svg$/));
 
 @Component
 export default class Icon extends Vue {
