@@ -52,7 +52,6 @@ export default class CategoryEdit extends Vue {
     if (!category) {
       this.$router.push('/')
     }
-    console.log(category)
     this.categoryName = category.name
     this.categoryIcon = category.icon
   }
