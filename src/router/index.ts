@@ -5,6 +5,7 @@ import RecordDetail from "@/views/record/RecordDetail.vue";
 import RecordEdit from "@/views/record/RecordEdit.vue";
 import CategoryAdd from "@/views/catagory/CategoryAdd.vue";
 import CategoryEdit from "@/views/catagory/CategoryEdit.vue";
+import CategoryManage from "@/views/catagory/CategoryManage.vue";
 import NotFound from "@/views/NotFound.vue";
 import Statistics from "@/views/Statistics.vue";
 
@@ -35,16 +36,20 @@ const routes: Array<RouteConfig> = [
     ],
   },
   {
-    path: "/catagory",
+    path: "/category",
     component: RouterViewContainer,
     children: [
       {
-        path: "edit",
+        path: "edit/:id",
         component: CategoryEdit,
       },
       {
-        path: "add",
+        path: "add/:type",
         component: CategoryAdd,
+      },
+      {
+        path: "manage",
+        component: CategoryManage,
       },
     ],
   },

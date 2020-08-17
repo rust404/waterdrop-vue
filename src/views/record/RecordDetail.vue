@@ -50,7 +50,7 @@ import Layout from "@/components/Layout.vue";
 import NavBar from "@/components/NavBar.vue";
 import TopBar from "@/components/TopBar.vue";
 import PopUp from "@/components/PopUp.vue";
-import Icon from "@/components/Icon.vue";
+import Icon from "@/components/Icon/Icon.vue";
 import DatePicker from "@/components/DatePicker/DatePicker.vue";
 import dayjs from "dayjs";
 import {State} from "vuex-class";

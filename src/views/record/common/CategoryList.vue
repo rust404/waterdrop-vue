@@ -11,14 +11,36 @@
       </div>
       {{category.name}}
     </li>
+    <li
+        v-if="type === 'manage'"
+        key="setting"
+        @click="handleManage"
+        class="category-list-item"
+    >
+      <div class="category-icon-wrapper">
+        <Icon :size="30" class="category-icon" name="settings" />
+      </div>
+      管理
+    </li>
+    <li
+        v-if="type === 'add'"
+        key="setting"
+        @click="handleAdd"
+        class="category-list-item"
+    >
+      <div class="category-icon-wrapper">
+        <Icon :size="30" class="category-icon" name="tianjia" />
+      </div>
+      添加
+    </li>
   </ul>
 </template>
 
 <script lang="ts">
-import {Vue, Component, Model, Prop, Watch} from "vue-property-decorator";
-import Icon from '@/components/Icon.vue';
+import {Vue, Component, Model, Prop} from "vue-property-decorator";
+import Icon from '@/components/Icon/Icon.vue';
 import classNames from 'classnames';
-import {Category, MoneyType} from "@/store/modules/module-types";
+import {Category} from "@/store/modules/module-types";
 
 
 @Component({
@@ -29,6 +51,7 @@ import {Category, MoneyType} from "@/store/modules/module-types";
 export default class CategoryList extends Vue {
   @Model('change', { type: Number }) readonly selectedCategoryId!: number;
   @Prop() readonly listData!: Category[];
+  @Prop({type: String}) readonly type?: 'manage' | 'add'
 
   listItemClassName(category: Category) {
     return classNames('category-list-item', {
@@ -37,6 +60,12 @@ export default class CategoryList extends Vue {
   }
   handleClick(id: number) {
     this.$emit('change', id)
+  }
+  handleManage() {
+    this.$emit('manage')
+  }
+  handleAdd() {
+    this.$emit('add')
   }
 }
 </script>

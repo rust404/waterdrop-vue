@@ -41,3 +41,9 @@ body {
   display: block;
   clear: both;
 }
+button {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: $font-base-size;
+}

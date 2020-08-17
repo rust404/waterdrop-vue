@@ -24,11 +24,9 @@ $y-space: 8px;
   justify-content: center;
   align-items: center;
   box-shadow: 0 2px 8px #e0e0e0;
-  line-height: 1.5;
+  line-height: 28px;
   flex-shrink: 0;
   .left, .right {
-    display: flex;
-    align-items: center;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
