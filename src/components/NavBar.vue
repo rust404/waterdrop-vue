@@ -10,7 +10,7 @@
     </router-link>
     <router-link class="nav-bar-item" to="/statistics">
       <Icon class="nav-bar-icon" name="statistics"/>
-      数据
+      图表
     </router-link>
   </nav>
 </template>

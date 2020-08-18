@@ -13,7 +13,6 @@
     </template>
     <div class="category-list-wrapper">
       <category-list type="manage" v-model="selectedId" :listData="selectedCategoryList" @manage="onManageClick"/>
-      {{selectedId}}
     </div>
     <div class="control-panel">
       <calc-str-bar :calcStr="calcStr"/>
