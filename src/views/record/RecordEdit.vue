@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Watch} from "vue-property-decorator";
+import {Vue, Component} from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import NavBar from "@/components/NavBar.vue";
 import Icon from "@/components/Icon/Icon.vue";
@@ -36,7 +36,7 @@ import {MoneyType, CategoryState, MoneyRecordState} from '@/store/modules/module
 
 import {
   State,
-  Mutation,
+  Action,
 } from 'vuex-class'
 
 type Operator = '+' | '-'
@@ -64,8 +64,8 @@ export default class RecordAdd extends Vue {
   selectedId = -1
   @State('category') categoryState!: CategoryState
   @State('record') recordState!: MoneyRecordState
-  @Mutation('record/edit') editRecord!: Function
-  @Mutation('record/delete') deleteRecord!: Function
+  @Action('record/edit') editRecord!: Function
+  @Action('record/delete') deleteRecord!: Function
 
   created() {
     const record = this.recordState.recordList.filter(record => record.id === parseInt(this.$route.params.id))[0]
@@ -157,7 +157,7 @@ export default class RecordAdd extends Vue {
       moneyType: this.moneyType,
       categoryId: this.selectedId,
       amount: +this.calcStr,
-      time: date.toISOString()
+      createAt: date.toISOString()
     })
     this.handleClear()
     this.$message({type: 'success', message: '编辑成功', duration: 1000})

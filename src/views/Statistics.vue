@@ -156,7 +156,7 @@ export default class Statistics extends Vue {
       expenditure: this.dateArr.map(_ => 0)
     }
     return records.reduce((acc, record) => {
-      acc[record.moneyType][dayjs(record.time).date() - 1] += record.amount
+      acc[record.moneyType][dayjs(record.createAt).date() - 1] += record.amount
       return acc
     }, ret)
   }
@@ -185,7 +185,7 @@ export default class Statistics extends Vue {
 
   getRecordsByMonth(records: MoneyRecord[], time: Date) {
     return records.filter(record => {
-      return dayjs(record.time).year() === dayjs(time).year() && dayjs(record.time).month() === dayjs(time).month()
+      return dayjs(record.createAt).year() === dayjs(time).year() && dayjs(record.createAt).month() === dayjs(time).month()
     })
   }
 

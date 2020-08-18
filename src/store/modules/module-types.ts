@@ -8,7 +8,7 @@ export interface Category {
 export type MoneyType = "income" | "expenditure";
 
 export interface MoneyRecord {
-  time: string;
+  createAt: string;
   moneyType: MoneyType;
   categoryId: number;
   id: number;

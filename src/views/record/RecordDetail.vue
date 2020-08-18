@@ -82,14 +82,14 @@ export default class RecordDetail extends Vue {
 
   get selectedRecords() {
     return this.recordState.recordList.filter(record => {
-      const time = dayjs(record.time)
+      const time = dayjs(record.createAt)
       return time.year() === this.selectedYear && time.month() === this.selectedMonth
     })
   }
 
   get dateToRecord(): [string, MoneyRecord[]][] {
     const map = this.selectedRecords.reduce((acc, record) => {
-      const key = dayjs(record.time).format('YYYY-MM-DD')
+      const key = dayjs(record.createAt).format('YYYY-MM-DD')
       if (Object.prototype.hasOwnProperty.call(acc, key)) {
         acc[key].push(record)
       } else {
@@ -114,7 +114,7 @@ export default class RecordDetail extends Vue {
     return sum.toFixed(2).replace(/\.00$/, '')
   }
 
-  getFormattedDate(date: any) {
+  getFormattedDate(date: Date | string | number) {
     const str = '日一二三四五六'
     return dayjs(date).format('M月D日 星期') + str[dayjs(date).day()]
   }

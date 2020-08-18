@@ -36,7 +36,7 @@ import {MoneyType, CategoryState, MoneyRecordState} from '@/store/modules/module
 
 import {
   State,
-  Mutation,
+  Action,
 } from 'vuex-class'
 
 type Operator = '+' | '-'
@@ -64,7 +64,7 @@ export default class RecordAdd extends Vue {
   selectedId = -1
   @State('category') categoryState!: CategoryState
   @State('record') recordState!: MoneyRecordState
-  @Mutation('record/add') addRecord!: Function
+  @Action('record/add') addRecord!: Function
 
   get calcStr() {
     return this.left + this.operator + this.right
@@ -141,7 +141,7 @@ export default class RecordAdd extends Vue {
       moneyType: this.moneyType,
       categoryId: this.selectedId,
       amount: +this.calcStr,
-      time: date.toISOString()
+      createAt: date.toISOString()
     })
     this.handleClear()
     this.$message({type: 'success', message: '添加成功', duration: 1000})

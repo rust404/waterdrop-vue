@@ -1,33 +1,33 @@
 import { Category, CategoryState } from "./module-types";
-import { MutationTree, Module } from "vuex";
+import {MutationTree, Module, ActionTree} from "vuex";
+import {generateCategoryId, saveMaxCategoryId} from "@/store/utils/generateCategoryId";
+
+const defaultCategoryList = [
+  {
+    name: "餐饮",
+    icon: "canyin",
+    moneyType: "expenditure",
+  },
+  {
+    name: "旅行",
+    icon: "lvxing",
+    moneyType: "expenditure",
+  },
+  {
+    name: "理财",
+    icon: "licai",
+    moneyType: "income",
+  },
+]
 
 const state: CategoryState = {
-  categoryList: [
-    {
-      name: "餐饮",
-      icon: "canyin",
-      id: 1,
-      moneyType: "expenditure",
-    },
-    {
-      name: "旅行",
-      icon: "lvxing",
-      id: 2,
-      moneyType: "expenditure",
-    },
-    {
-      name: "理财",
-      icon: "licai",
-      id: 3,
-      moneyType: "income",
-    },
-  ],
+  categoryList: [],
 };
 
 const mutations: MutationTree<CategoryState> = {
   add(state, payload: Omit<Category, "id">) {
     state.categoryList.push({
-      id: +new Date(),
+      id: generateCategoryId(),
       ...payload,
     });
   },
@@ -49,9 +49,43 @@ const mutations: MutationTree<CategoryState> = {
     }
   },
 };
+const actions: ActionTree<CategoryState, {}> = {
+  add({state, commit, dispatch}, payload: Omit<Category, "id">) {
+    commit('add', payload)
+    saveMaxCategoryId()
+    dispatch('save')
+  },
+  edit({commit, dispatch}, payload: Pick<Category, "id"> & Partial<Omit<Category, "id">>) {
+    commit('edit', payload)
+    dispatch('save')
+  },
+  delete({commit, dispatch}, id: number) {
+    commit('delete', id)
+    dispatch('save')
+  },
+  save({state}) {
+    window.localStorage.setItem('categories', JSON.stringify(state.categoryList))
+  },
+  load({state, dispatch}) {
+    const list = JSON.parse(window.localStorage.getItem('categories') || '[]')
+    if (list.length > 0) {
+      state.categoryList = list
+      return
+    }
+    // 默认情况下添加类型
+    defaultCategoryList.forEach(({name, icon, moneyType}) => {
+      dispatch('add', {
+        name,
+        icon,
+        moneyType
+      })
+    })
+  }
+}
 
 export const category: Module<CategoryState, {}> = {
   namespaced: true,
   state,
   mutations,
+  actions,
 };

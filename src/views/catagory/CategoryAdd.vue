@@ -32,7 +32,7 @@ import Icon from "@/components/Icon/Icon.vue";
 import {CategoryState, MoneyType} from "@/store/modules/module-types";
 import {CATEGORY_ICON_NAMES} from "@/assets/icon";
 import classNames from "classnames";
-import {Mutation, State} from "vuex-class";
+import {Action, State} from "vuex-class";
 
 @Component({
   components: {
@@ -43,7 +43,7 @@ import {Mutation, State} from "vuex-class";
 })
 export default class CategoryAdd extends Vue {
   @State('category') readonly categoryState!: CategoryState
-  @Mutation('category/add') readonly categoryAdd!: Function
+  @Action('category/add') readonly categoryAdd!: Function
   iconList = CATEGORY_ICON_NAMES
   categoryName = ''
   categoryIcon = CATEGORY_ICON_NAMES[0]
