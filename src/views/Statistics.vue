@@ -5,28 +5,34 @@
     </template>
     <template v-slot:header>
       <top-bar>
-        水滴记账
+        <radio-group v-model="dateType">
+          <radio-button label="year">年</radio-button>
+          <radio-button label="year-month">月</radio-button>
+        </radio-group>
       </top-bar>
     </template>
     <div class="date" @click="showDatePicker = true">
       {{ dateStr }}&#9660;
     </div>
-    <v-echarts height="200px" :option="option" :listeners="echartsListeners"/>
-    <ol class="category-rank-list">
+    <v-echarts class="charts" height="200px" :option="option" :listeners="echartsListeners"/>
+    <div v-if="categoryRankData.length === 0">暂无数据</div>
+    <ol v-else class="category-rank-list">
       <li class="rank-list-item" v-for="item in categoryRankData" :key="item.category.id">
-        <div class="icon-wrapper"><icon class="icon" size="24" :name="item.category.icon"/></div>
+        <div class="icon-wrapper">
+          <icon class="icon" size="24" :name="item.category.icon"/>
+        </div>
         <div class="info">
           <span class="text-info">
-            <span class="icon-name">{{item.category.name}}</span>
-            <span class="percent">{{item.percent.toFixed(2)}}%</span>
-            <span class="amount">{{item.sum}}</span>
+            <span class="icon-name">{{ item.category.name }}</span>
+            <span class="percent">{{ item.percent.toFixed(2) }}%</span>
+            <span class="amount">{{ item.sum }}</span>
           </span>
           <div class="percent-bar" :style="{width: item.percent + '%'}"></div>
         </div>
       </li>
     </ol>
     <pop-up v-model="showDatePicker" position="bottom">
-      <DatePicker type="year-month" v-model="curDate" @ok="showDatePicker = !showDatePicker"/>
+      <DatePicker :type="dateType" v-model="curDate" @ok="showDatePicker = !showDatePicker"/>
     </pop-up>
   </layout>
 </template>
@@ -43,12 +49,15 @@ import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import Icon from "@/components/Icon/Icon.vue";
 import VEcharts from "@/components/VEcharts.vue";
 import dayjs from "dayjs";
-import {Category, CategoryState, MoneyRecord, MoneyRecordState, MoneyType} from "@/store/modules/module-types";
+import {Category, MoneyRecord, MoneyType} from "@/store/modules/module-types";
 import {State} from "vuex-class";
 import {EChartOption} from "echarts";
+import {getCategoryById, getRecords, getRecordsByMonth, getRecordsByYear} from "@/store/utils";
 
 type CategoryToRecordsMap = { [categoryId: number]: MoneyRecord[] }
 type CategoryToSumMap = { [categoryId: number]: number }
+
+const monthArr = Array(12).fill(0).map((_, index) => index + 1)
 
 @Component({
   components: {
@@ -64,8 +73,9 @@ type CategoryToSumMap = { [categoryId: number]: number }
   }
 })
 export default class Statistics extends Vue {
-  @State('category') readonly categoryState!: CategoryState
-  @State('record') readonly recordState!: MoneyRecordState
+  @State(state => state.record.recordList) readonly recordList!: MoneyRecord[]
+  @State(state => state.category.categoryList) readonly categoryList!: Category[]
+  dateType = 'year-month'
   curDate = new Date()
   showDatePicker = false
   moneyType: MoneyType = 'expenditure'
@@ -76,7 +86,11 @@ export default class Statistics extends Vue {
   }
 
   get dateStr() {
-    return dayjs(this.curDate).format('YYYY年M月')
+    if (this.dateType === 'year') {
+      return dayjs(this.curDate).format('YYYY年')
+    } else {
+      return dayjs(this.curDate).format('YYYY年M月')
+    }
   }
 
   get dateArr() {
@@ -84,16 +98,19 @@ export default class Statistics extends Vue {
   }
 
   get categoryRankData() {
-    let records = this.recordState.recordList
-    records = this.getRecordsByMonth(records, this.curDate)
-    records = this.getRecordsByMoneyType(records, this.moneyType)
-    const sumByCategory = this.getSumByCategory(records)
-    const ret = Object.entries(sumByCategory)
+    let records = this.recordList
+    records = this.dateType === 'year-month' ?
+        getRecordsByMonth(records, this.curDate) : getRecordsByYear(records, this.curDate)
+    records = getRecords(records, {
+      moneyType: this.moneyType
+    })
+    const sumsForCategories = this.getSumsForCategories(records)
+    const ret = Object.entries(sumsForCategories)
     const total = ret.reduce((acc, item) => acc + item[1], 0)
     ret.sort((a, b) => b[1] - a[1])
     return ret.map(item => {
       return {
-        category: this.getCategoryById(this.categoryState.categoryList, parseInt(item[0])),
+        category: getCategoryById(this.categoryList, parseInt(item[0])),
         sum: item[1],
         percent: item[1] / total * 100
       }
@@ -110,11 +127,33 @@ export default class Statistics extends Vue {
   }
 
   get option(): EChartOption {
-    const seriesData = this.getSumByDates(this.recordState.recordList, this.curDate)
+    const xSeriesData = this.dateType === 'year-month' ? this.dateArr : monthArr
+    const ySeriesData = this.dateType === 'year-month' ?
+        this.getSumByDates(this.recordList, this.curDate) : this.getSumForMonths(this.recordList, this.curDate)
+
     return {
-      color: ['#ef5350', '#66bb6a'],
+      tooltip: {
+        show: true,
+        trigger: 'axis',
+        transitionDuration: 0,
+        formatter: `{b}${this.dateType === 'year' ? '月' : '日'}<br/>{a} : {c}元`,
+        textStyle: {
+          fontSize: 12,
+        },
+        confine: true,
+        position: function(point, params) {
+          return [point[0], '30%']
+        }
+      },
+      grid: {
+        top: 40,
+        bottom: 20,
+        left: 10,
+        right: 10
+      },
+      color: ['#ff9800'],
       title: {
-        text: '月度趋势图',
+        text: `${this.dateType === 'year' ? '年' : '月'}度趋势图`,
         top: 10,
         left: 6,
         textStyle: {
@@ -128,29 +167,43 @@ export default class Statistics extends Vue {
       },
       xAxis: {
         type: 'category',
-        data: this.dateArr
+        data: xSeriesData,
+        axisTick: {
+          show: false
+        },
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
+        show: false
       },
       series: [{
         name: '支出',
-        data: seriesData['expenditure'],
-        type: 'bar'
+        seriesLayoutBy: 'row',
+        type: 'line',
+        symbol: 'emptycircle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#bbb',
+          width: 1,
+        },
+        data: ySeriesData['expenditure']
       }, {
         name: '收入',
-        data: seriesData['income'],
-        type: 'bar'
+        seriesLayoutBy: 'row',
+        type: 'line',
+        symbol: 'emptycircle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#bbb',
+          width: 1,
+        },
+        data: ySeriesData['income']
       }]
     }
   }
 
-  getCategoryById(categories: Category[], id: number) {
-    return categories.filter(category => category.id === id)[0]
-  }
-
   getSumByDates(records: MoneyRecord[], date: Date) {
-    records = this.getRecordsByMonth(records, date)
+    records = getRecordsByMonth(records, date)
     const ret = {
       income: this.dateArr.map(_ => 0),
       expenditure: this.dateArr.map(_ => 0)
@@ -161,7 +214,22 @@ export default class Statistics extends Vue {
     }, ret)
   }
 
-  getSumByCategory(records: MoneyRecord[]): CategoryToSumMap {
+  getSumForMonths(records: MoneyRecord[], date: Date) {
+    records = getRecordsByYear(records, date)
+    const ret: {
+      income: number[];
+      expenditure: number[];
+    } = {
+      income: monthArr.map(_ => 0),
+      expenditure: monthArr.map(_ => 0)
+    }
+    return records.reduce((acc, record) => {
+      acc[record.moneyType][dayjs(record.createAt).month()] += record.amount
+      return acc
+    }, ret)
+  }
+
+  getSumsForCategories(records: MoneyRecord[]): CategoryToSumMap {
     function getCategoryToRecordMap(records: MoneyRecord[]) {
       const map: CategoryToRecordsMap = {}
       return records.reduce((acc, record) => {
@@ -182,29 +250,15 @@ export default class Statistics extends Vue {
     }
     return ret
   }
-
-  getRecordsByMonth(records: MoneyRecord[], time: Date) {
-    return records.filter(record => {
-      return dayjs(record.createAt).year() === dayjs(time).year() && dayjs(record.createAt).month() === dayjs(time).month()
-    })
-  }
-
-  getRecordsByMoneyType(records: MoneyRecord[], type: MoneyType) {
-    return records.filter(record => {
-      return record.moneyType === type
-    })
-  }
-
-  getRecordsByCategoryId(records: MoneyRecord[], id: number) {
-    return records.filter(record => {
-      return record.categoryId === id
-    })
-  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '~@/style/variable';
+
+.charts {
+  flex-shrink: 0;
+}
 
 .date {
   text-align: center;
@@ -212,14 +266,17 @@ export default class Statistics extends Vue {
   background-color: $grey-1;
   line-height: 30px;
 }
+
 .category-rank-list {
   padding: 10px;
+
   .rank-list-item {
     display: flex;
     align-items: center;
     margin: 10px 0;
     padding: 10px 0;
     border-bottom: 1px solid $grey-2;
+
     .icon-wrapper {
       width: 40px;
       height: 40px;
@@ -229,23 +286,29 @@ export default class Statistics extends Vue {
       align-items: center;
       border-radius: 20px;
       margin-right: 10px;
+
       .icon {
         fill: $brand-color;
       }
     }
+
     .info {
       flex: 1;
+
       .text-info {
         display: flex;
         align-items: center;
+
         .percent {
           font-size: 12px;
           margin-left: 6px;
         }
+
         .amount {
           margin-left: auto;
         }
       }
+
       .percent-bar {
         margin: 4px 0;
         height: 6px;

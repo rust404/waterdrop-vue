@@ -18,7 +18,7 @@ import {Vue, Component, Model, Prop} from "vue-property-decorator";
 import dayjs from 'dayjs';
 import PickerList from "@/components/DatePicker/PickerList.vue";
 
-export type DatePickerType = 'full-date' | 'year-month' | 'month-date'
+export type DatePickerType = 'year' | 'full-date' | 'year-month' | 'month-date'
 
 @Component({
   components: {
@@ -45,7 +45,7 @@ export default class DatePicker extends Vue {
   }
 
   get showYear() {
-    return this.type === 'full-date' || this.type === 'year-month'
+    return this.type === 'full-date' || this.type === 'year-month' || this.type === 'year'
   }
   get showMonth() {
     return this.type === 'full-date' || this.type === 'year-month' || this.type === 'month-date'

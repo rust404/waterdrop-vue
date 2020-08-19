@@ -15,6 +15,10 @@ export interface MoneyRecord {
   amount: number;
 }
 
+export interface IndexedMoneyRecord extends MoneyRecord {
+  [index: string]: any;
+}
+
 export interface CategoryState {
   categoryList: Category[];
 }
