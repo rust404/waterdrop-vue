@@ -1,4 +1,7 @@
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+      ? '/waterdrop-vue-site/'
+      : '/',
   //lintOnSave: false,
   transpileDependencies: ["vuex-module-decorators"],
   chainWebpack: (config) => {
