@@ -58,7 +58,7 @@ export default class RecordAdd extends Vue {
   @Action('record/delete') deleteRecord!: Function
   moneyType: MoneyType = 'expenditure'
   selectedId = -1
-  curDate: Date
+  curDate: Date = new Date
   calcStr = ''
 
   created() {

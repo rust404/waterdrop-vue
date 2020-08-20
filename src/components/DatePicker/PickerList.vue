@@ -32,9 +32,7 @@ export default class PickerList extends Vue {
 
   @Watch('listData')
   onListDataChange(val: Array<ListItem>) {
-    console.log('watch')
     const curIndex = -Math.round(parseInt(this.style.top) / 30)
-    console.log(curIndex)
     if (curIndex >= this.listData.length) {
       this.style.top = -(this.listData.length - 1) * 30 + 'px'
     }

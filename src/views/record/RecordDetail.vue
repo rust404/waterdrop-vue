@@ -7,7 +7,7 @@
       <top-bar class="detail-top-bar">水滴记账</top-bar>
       <div class="general">
         <div class="income">
-          <span>{{ getSum(selectedRecords, 'income') }}</span>
+          <span>{{ getRecordSumByMoneyType(selectedRecords, 'income') }}</span>
           <span>{{ selectedMonth + 1 }}月收入</span>
         </div>
         <div class="time">
@@ -15,17 +15,17 @@
           <span class="year">{{ selectedYear }}年</span>
         </div>
         <div class="expenditure">
-          <span>{{ getSum(selectedRecords, 'expenditure') }}</span>
+          <span>{{ getRecordSumByMoneyType(selectedRecords, 'expenditure') }}</span>
           <span>{{ selectedMonth + 1 }}月支出</span>
         </div>
       </div>
     </template>
-    <div class="detail" v-if="dateToRecord.length > 0">
-      <div class="group-by-date" v-for="(item, index) in dateToRecord" :key="index">
+    <div class="detail" v-if="sortedDateAndRecordGroup.length > 0">
+      <div class="group-by-date" v-for="(item, index) in sortedDateAndRecordGroup" :key="index">
         <div class="date-record-general">
           <span class="date">{{ getFormattedDate(item[0]) }}</span>
-          <span class="income">收入：{{ getSum(item[1], 'income') }}</span>
-          <span class="expenditure">支出：{{ getSum(item[1], 'expenditure') }}</span>
+          <span class="income">收入：{{ getRecordSumByMoneyType(item[1], 'income') }}</span>
+          <span class="expenditure">支出：{{ getRecordSumByMoneyType(item[1], 'expenditure') }}</span>
         </div>
         <ul class="date-record-detail">
           <li v-for="record in item[1]" :key="record.id" @click="$router.push(`/record/edit/${record.id}`)">
@@ -58,7 +58,7 @@ import DatePicker from "@/components/DatePicker/DatePicker.vue";
 import dayjs from "dayjs";
 import {State} from "vuex-class";
 import {Category, MoneyRecord, MoneyType} from "@/store/modules/module-types";
-import {getCategoryById} from "@/store/utils";
+import {getCategoryById, getRecordsByMonth} from "@/store/utils";
 
 @Component({
   components: {
@@ -85,13 +85,10 @@ export default class RecordDetail extends Vue {
   }
 
   get selectedRecords() {
-    return this.recordList.filter(record => {
-      const time = dayjs(record.createAt)
-      return time.year() === this.selectedYear && time.month() === this.selectedMonth
-    })
+    return getRecordsByMonth(this.recordList, this.selectedTime)
   }
 
-  get dateToRecord(): [string, MoneyRecord[]][] {
+  get sortedDateAndRecordGroup(): [string, MoneyRecord[]][] {
     const map = this.selectedRecords.reduce((acc, record) => {
       const key = dayjs(record.createAt).format('YYYY-MM-DD')
       if (Object.prototype.hasOwnProperty.call(acc, key)) {
@@ -108,7 +105,7 @@ export default class RecordDetail extends Vue {
     })
   }
 
-  getSum(records: MoneyRecord[], type: MoneyType) {
+  getRecordSumByMoneyType(records: MoneyRecord[], type: MoneyType) {
     const sum = records.reduce((acc, record) => {
       if (record.moneyType === type) {
         acc += record.amount
