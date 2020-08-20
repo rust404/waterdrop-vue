@@ -36,8 +36,9 @@ import dayjs from "dayjs";
   }
 })
 export default class NumberPad extends Vue {
-  @Prop() showEqual!: boolean
-  curDate = new Date()
+  @Prop() readonly showEqual!: boolean
+  @Prop() readonly defaultDate!: Date | string
+  curDate = this.defaultDate ? new Date(this.defaultDate) : new Date()
   showDatePicker = false
 
   get dateStr() {

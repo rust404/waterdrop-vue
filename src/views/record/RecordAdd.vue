@@ -32,7 +32,7 @@ import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import CategoryList from "./common/CategoryList.vue";
 import NumberPad from "./common/NumberPad.vue";
 import CalcStrBar from "./common/CalcStrBar.vue";
-import {MoneyType, CategoryState, MoneyRecordState} from '@/store/modules/module-types';
+import {MoneyType, Category} from '@/store/modules/module-types';
 
 import {
   State,
@@ -62,15 +62,14 @@ export default class RecordAdd extends Vue {
   right = ''
   operator = ''
   selectedId = -1
-  @State('category') categoryState!: CategoryState
-  @State('record') recordState!: MoneyRecordState
+  @State(state => state.category.categoryList) categoryList!: Category[]
   @Action('record/add') addRecord!: Function
 
   get calcStr() {
     return this.left + this.operator + this.right
   }
   get selectedCategoryList() {
-    return this.categoryState.categoryList.filter(item => item.moneyType === this.moneyType)
+    return this.categoryList.filter(item => item.moneyType === this.moneyType)
   }
   onManageClick() {
     this.$router.push('/category/manage')

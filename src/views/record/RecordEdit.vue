@@ -16,7 +16,7 @@
     </div>
     <div class="control-panel">
       <calc-str-bar :calcStr="calcStr"/>
-      <number-pad :showEqual="operator.length !== 0" @change="onChange"/>
+      <number-pad :default-date="createAt" :showEqual="operator.length !== 0" @change="onChange"/>
     </div>
   </layout>
 </template>
@@ -32,7 +32,7 @@ import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import CategoryList from "./common/CategoryList.vue";
 import NumberPad from "./common/NumberPad.vue";
 import CalcStrBar from "./common/CalcStrBar.vue";
-import {MoneyType, CategoryState, MoneyRecordState} from '@/store/modules/module-types';
+import {MoneyType, Category, MoneyRecord} from '@/store/modules/module-types';
 
 import {
   State,
@@ -62,25 +62,27 @@ export default class RecordAdd extends Vue {
   right = ''
   operator = ''
   selectedId = -1
-  @State('category') categoryState!: CategoryState
-  @State('record') recordState!: MoneyRecordState
+  createAt = ''
+  @State(state => state.category.categoryList) categoryList!: Category[]
+  @State(state => state.record.recordList) recordList!: MoneyRecord[]
   @Action('record/edit') editRecord!: Function
   @Action('record/delete') deleteRecord!: Function
 
   created() {
-    const record = this.recordState.recordList.filter(record => record.id === parseInt(this.$route.params.id))[0]
+    const record = this.recordList.filter(record => record.id === parseInt(this.$route.params.id))[0]
     if (!record) {
       this.$router.push('/')
     }
     this.left = '' + record.amount
     this.selectedId = record.categoryId
     this.moneyType = record.moneyType
+    this.createAt = record.createAt
   }
   get calcStr() {
     return this.left + this.operator + this.right
   }
   get selectedCategoryList() {
-    return this.categoryState.categoryList.filter(item => item.moneyType === this.moneyType)
+    return this.categoryList.filter(item => item.moneyType === this.moneyType)
   }
   onManageClick() {
     this.$router.push('/category/manage')
