@@ -16,7 +16,16 @@
     </div>
     <div class="control-panel">
       <calc-str-bar :calcStr="calcStr"/>
-      <number-pad :default-date="createAt" :showEqual="operator.length !== 0" @change="onChange"/>
+      <number-pad
+        :showEqual="operator.length !== 0"
+        v-model="curDate"
+        @input:number="handleNumber"
+        @input:operator="handleOperator"
+        @input:dot="handleDot"
+        @input:submit="handleSubmit"
+        @input:getResult="getCalcResult"
+        @input:clear="handleClear"
+      />
     </div>
   </layout>
 </template>
@@ -39,10 +48,6 @@ import {
   Action,
 } from 'vuex-class'
 
-type Operator = '+' | '-'
-type NumberStr = '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'
-type NumberPadHandlerVal = Operator | NumberStr | 'submit' | 'date' | 'clear'|'.'|'getResult'
-
 @Component({
   components: {
     Layout,
@@ -62,7 +67,7 @@ export default class RecordAdd extends Vue {
   right = ''
   operator = ''
   selectedId = -1
-  createAt = ''
+  curDate: Date
   @State(state => state.category.categoryList) categoryList!: Category[]
   @State(state => state.record.recordList) recordList!: MoneyRecord[]
   @Action('record/edit') editRecord!: Function
@@ -76,22 +81,27 @@ export default class RecordAdd extends Vue {
     this.left = '' + record.amount
     this.selectedId = record.categoryId
     this.moneyType = record.moneyType
-    this.createAt = record.createAt
+    this.curDate = new Date(record.createAt)
   }
+
   get calcStr() {
     return this.left + this.operator + this.right
   }
+
   get selectedCategoryList() {
     return this.categoryList.filter(item => item.moneyType === this.moneyType)
   }
+
   onManageClick() {
     this.$router.push('/category/manage')
   }
+
   handleDelete() {
     this.deleteRecord(parseInt(this.$route.params.id))
     this.$message({type: 'success', message: '删除成功'})
     this.$router.back()
   }
+
   getCalcResult() {
     let result = 0
     if (this.operator === '+') {
@@ -104,12 +114,14 @@ export default class RecordAdd extends Vue {
     this.right = ''
     this.operator = ''
   }
+
   handleOperator(val: Operator) {
     if (this.right.length !== 0) {
       this.getCalcResult()
     }
     this.operator = val
   }
+
   handleNumber(val: NumberStr) {
     const reg = /\.\d{2,}$/
     if (this.operator) {
@@ -128,6 +140,7 @@ export default class RecordAdd extends Vue {
       }
     }
   }
+
   handleDot() {
     if (this.operator) {
       if (this.right.indexOf('.') === -1) {
@@ -139,6 +152,7 @@ export default class RecordAdd extends Vue {
       }
     }
   }
+
   validate() {
     if (this.selectedId === -1) {
       this.$message({type: 'warning', message: '分类不能为空'})
@@ -149,6 +163,7 @@ export default class RecordAdd extends Vue {
     }
     return true
   }
+
   handleSubmit(date: Date) {
     this.getCalcResult()
     if (!this.validate()) {
@@ -159,54 +174,33 @@ export default class RecordAdd extends Vue {
       moneyType: this.moneyType,
       categoryId: this.selectedId,
       amount: +this.calcStr,
-      createAt: date.toISOString()
+      createAt: this.curDate.toISOString()
     })
     this.handleClear()
     this.$message({type: 'success', message: '编辑成功', duration: 1000})
     this.$router.push('/record/detail')
   }
+
   handleClear() {
     this.left = '0'
     this.right = ''
     this.operator = ''
-  }
-  onChange(val: NumberPadHandlerVal, date?: Date) {
-    switch(val) {
-      case '+':
-      case '-':
-        this.handleOperator(val)
-        break
-      case 'submit':
-        this.handleSubmit(date as Date)
-        break
-      case 'clear':
-        this.handleClear()
-        break
-      case 'date':
-        // this.handleDate()
-        break
-      case '.':
-        this.handleDot()
-        break
-      case 'getResult':
-        this.getCalcResult()
-        break
-      default:
-        this.handleNumber(val)
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '~@/style/variable';
+
 .category-list-wrapper {
   flex: 1;
   overflow: auto;
 }
+
 .control-panel {
   flex-shrink: 0;
 }
+
 .delete-btn {
   color: $danger;
 }

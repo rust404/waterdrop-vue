@@ -54,7 +54,7 @@ import Icon from "@/components/Icon/Icon.vue";
 import DatePicker from "@/components/DatePicker/DatePicker.vue";
 import dayjs from "dayjs";
 import {State} from "vuex-class";
-import {CategoryState, MoneyRecord, MoneyRecordState, MoneyType} from "@/store/modules/module-types";
+import {Category, CategoryState, MoneyRecord, MoneyRecordState, MoneyType} from "@/store/modules/module-types";
 
 @Component({
   components: {
@@ -67,8 +67,8 @@ import {CategoryState, MoneyRecord, MoneyRecordState, MoneyType} from "@/store/m
   }
 })
 export default class RecordDetail extends Vue {
-  @State('category') categoryState!: CategoryState
-  @State('record') recordState!: MoneyRecordState
+  @State(state => state.category.categoryList) categoryList!: Category[]
+  @State(state => state.record.recordList) recordList!: MoneyRecord[]
   selectedTime = new Date()
   showDatePicker = false
 
@@ -81,7 +81,7 @@ export default class RecordDetail extends Vue {
   }
 
   get selectedRecords() {
-    return this.recordState.recordList.filter(record => {
+    return this.recordList.filter(record => {
       const time = dayjs(record.createAt)
       return time.year() === this.selectedYear && time.month() === this.selectedMonth
     })
@@ -120,12 +120,12 @@ export default class RecordDetail extends Vue {
   }
 
   getCategoryIcon(id: number) {
-    const category = this.categoryState.categoryList.filter(category => category.id === id)[0]
+    const category = this.categoryList.filter(category => category.id === id)[0]
     return category ? category.icon : ''
   }
 
   getCategoryName(id: number) {
-    const category = this.categoryState.categoryList.filter(category => category.id === id)[0]
+    const category = this.categoryList.filter(category => category.id === id)[0]
     return category ? category.name : ''
   }
 }

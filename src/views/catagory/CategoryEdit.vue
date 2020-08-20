@@ -29,7 +29,7 @@ import {Vue, Component} from 'vue-property-decorator';
 import Layout from "@/components/Layout.vue";
 import TopBar from "@/components/TopBar.vue";
 import Icon from "@/components/Icon/Icon.vue";
-import {CategoryState} from "@/store/modules/module-types";
+import {Category, CategoryState} from "@/store/modules/module-types";
 import {CATEGORY_ICON_NAMES} from "@/assets/icon";
 import {Action, State} from "vuex-class";
 
@@ -41,13 +41,13 @@ import {Action, State} from "vuex-class";
   }
 })
 export default class CategoryEdit extends Vue {
-  @State('category') readonly categoryState!: CategoryState
+  @State(state => state.category.categoryList) readonly categoryList!: Category[]
   @Action('category/edit') readonly categoryEdit!: Function
   iconList = CATEGORY_ICON_NAMES
   categoryName = ''
   categoryIcon = ''
   created() {
-    const category = this.categoryState.categoryList.filter(category => category.id === Number(this.$route.params.id))[0]
+    const category = this.categoryList.filter(category => category.id === Number(this.$route.params.id))[0]
     if (!category) {
       this.$router.push('/')
     }

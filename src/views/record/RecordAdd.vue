@@ -16,7 +16,16 @@
     </div>
     <div class="control-panel">
       <calc-str-bar :calcStr="calcStr"/>
-      <number-pad :showEqual="operator.length !== 0" @change="onChange"/>
+      <number-pad
+        :showEqual="operator.length !== 0"
+        v-model="curDate"
+        @input:number="handleNumber"
+        @input:operator="handleOperator"
+        @input:dot="handleDot"
+        @input:submit="handleSubmit"
+        @input:getResult="getCalcResult"
+        @input:clear="handleClear"
+      />
     </div>
   </layout>
 </template>
@@ -39,10 +48,6 @@ import {
   Action,
 } from 'vuex-class'
 
-type Operator = '+' | '-'
-type NumberStr = '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'
-type NumberPadHandlerVal = Operator | NumberStr | 'submit' | 'date' | 'clear'|'.'|'getResult'
-
 @Component({
   components: {
     Layout,
@@ -62,6 +67,7 @@ export default class RecordAdd extends Vue {
   right = ''
   operator = ''
   selectedId = -1
+  curDate = new Date()
   @State(state => state.category.categoryList) categoryList!: Category[]
   @Action('record/add') addRecord!: Function
 
@@ -131,7 +137,7 @@ export default class RecordAdd extends Vue {
     }
     return true
   }
-  handleSubmit(date: Date) {
+  handleSubmit() {
     this.getCalcResult()
     if (!this.validate()) {
       return
@@ -140,7 +146,7 @@ export default class RecordAdd extends Vue {
       moneyType: this.moneyType,
       categoryId: this.selectedId,
       amount: +this.calcStr,
-      createAt: date.toISOString()
+      createAt: this.curDate.toISOString()
     })
     this.handleClear()
     this.$message({type: 'success', message: '添加成功', duration: 1000})
@@ -150,31 +156,6 @@ export default class RecordAdd extends Vue {
     this.left = '0'
     this.right = ''
     this.operator = ''
-  }
-  onChange(val: NumberPadHandlerVal, date?: Date) {
-    switch(val) {
-      case '+':
-      case '-':
-        this.handleOperator(val)
-        break
-      case 'submit':
-        this.handleSubmit(date as Date)
-        break
-      case 'clear':
-        this.handleClear()
-        break
-      case 'date':
-        // this.handleDate()
-        break
-      case '.':
-        this.handleDot()
-        break
-      case 'getResult':
-        this.getCalcResult()
-        break
-      default:
-        this.handleNumber(val)
-    }
   }
 }
 </script>
