@@ -16,22 +16,13 @@
     </div>
     <div class="control-panel">
       <calc-str-bar :calcStr="calcStr"/>
-      <number-pad
-        :showEqual="operator.length !== 0"
-        v-model="curDate"
-        @input:number="handleNumber"
-        @input:operator="handleOperator"
-        @input:dot="handleDot"
-        @input:submit="handleSubmit"
-        @input:getResult="getCalcResult"
-        @input:clear="handleClear"
-      />
+      <calc-pad :date.sync="curDate" :calc.sync="calcStr" @submit="handleSubmit"/>
     </div>
   </layout>
 </template>
 
 <script lang="ts">
-import {Vue, Component} from "vue-property-decorator";
+import {Component, Vue} from "vue-property-decorator";
 import Layout from "@/components/Layout.vue";
 import NavBar from "@/components/NavBar.vue";
 import Icon from "@/components/Icon/Icon.vue";
@@ -41,12 +32,10 @@ import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import CategoryList from "./common/CategoryList.vue";
 import NumberPad from "./common/NumberPad.vue";
 import CalcStrBar from "./common/CalcStrBar.vue";
-import {MoneyType, Category, MoneyRecord} from '@/store/modules/module-types';
+import CalcPad from "@/views/record/common/withCalc";
+import {Category, MoneyRecord, MoneyType} from '@/store/modules/module-types';
 
-import {
-  State,
-  Action,
-} from 'vuex-class'
+import {Action, State,} from 'vuex-class'
 
 @Component({
   components: {
@@ -59,33 +48,28 @@ import {
     CategoryList,
     NumberPad,
     CalcStrBar,
+    CalcPad,
   },
 })
 export default class RecordAdd extends Vue {
-  moneyType: MoneyType = 'expenditure'
-  left = '0'
-  right = ''
-  operator = ''
-  selectedId = -1
-  curDate: Date
   @State(state => state.category.categoryList) categoryList!: Category[]
   @State(state => state.record.recordList) recordList!: MoneyRecord[]
   @Action('record/edit') editRecord!: Function
   @Action('record/delete') deleteRecord!: Function
+  moneyType: MoneyType = 'expenditure'
+  selectedId = -1
+  curDate: Date
+  calcStr = ''
 
   created() {
     const record = this.recordList.filter(record => record.id === parseInt(this.$route.params.id))[0]
     if (!record) {
       this.$router.push('/')
     }
-    this.left = '' + record.amount
     this.selectedId = record.categoryId
     this.moneyType = record.moneyType
     this.curDate = new Date(record.createAt)
-  }
-
-  get calcStr() {
-    return this.left + this.operator + this.right
+    this.calcStr = '' + record.amount
   }
 
   get selectedCategoryList() {
@@ -102,57 +86,6 @@ export default class RecordAdd extends Vue {
     this.$router.back()
   }
 
-  getCalcResult() {
-    let result = 0
-    if (this.operator === '+') {
-      result = +this.left + +this.right
-    } else {
-      result = +this.left - +this.right
-    }
-    // 如果为.00，则说明为整数，可以去除
-    this.left = result.toFixed(2).replace(/\.00$/, '')
-    this.right = ''
-    this.operator = ''
-  }
-
-  handleOperator(val: Operator) {
-    if (this.right.length !== 0) {
-      this.getCalcResult()
-    }
-    this.operator = val
-  }
-
-  handleNumber(val: NumberStr) {
-    const reg = /\.\d{2,}$/
-    if (this.operator) {
-      if (reg.test(this.right)) return
-      if (this.right === '0') {
-        this.right = val
-      } else {
-        this.right += val
-      }
-    } else {
-      if (reg.test(this.left)) return
-      if (this.left === '0') {
-        this.left = val
-      } else {
-        this.left += val
-      }
-    }
-  }
-
-  handleDot() {
-    if (this.operator) {
-      if (this.right.indexOf('.') === -1) {
-        this.right += '.'
-      }
-    } else {
-      if (this.left.indexOf('.') === -1) {
-        this.left += '.'
-      }
-    }
-  }
-
   validate() {
     if (this.selectedId === -1) {
       this.$message({type: 'warning', message: '分类不能为空'})
@@ -160,12 +93,14 @@ export default class RecordAdd extends Vue {
     } else if (this.calcStr === '0') {
       this.$message({type: 'warning', message: '数值不能为0'})
       return false
+    } else if (parseFloat(this.calcStr) < 0) {
+      this.$message({type: 'warning', message: '数值不能为负'})
+      return false
     }
     return true
   }
 
   handleSubmit(date: Date) {
-    this.getCalcResult()
     if (!this.validate()) {
       return
     }
@@ -176,15 +111,8 @@ export default class RecordAdd extends Vue {
       amount: +this.calcStr,
       createAt: this.curDate.toISOString()
     })
-    this.handleClear()
     this.$message({type: 'success', message: '编辑成功', duration: 1000})
     this.$router.push('/record/detail')
-  }
-
-  handleClear() {
-    this.left = '0'
-    this.right = ''
-    this.operator = ''
   }
 }
 </script>

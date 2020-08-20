@@ -10,6 +10,7 @@
 import {Vue, Component} from 'vue-property-decorator'
 import {Action} from "vuex-class";
 
+
 @Component
 export default class App extends Vue {
   @Action('category/load') readonly loadCategory!: Function

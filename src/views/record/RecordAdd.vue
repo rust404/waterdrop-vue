@@ -16,16 +16,7 @@
     </div>
     <div class="control-panel">
       <calc-str-bar :calcStr="calcStr"/>
-      <number-pad
-        :showEqual="operator.length !== 0"
-        v-model="curDate"
-        @input:number="handleNumber"
-        @input:operator="handleOperator"
-        @input:dot="handleDot"
-        @input:submit="handleSubmit"
-        @input:getResult="getCalcResult"
-        @input:clear="handleClear"
-      />
+      <calc-pad :date.sync="curDate" :calc.sync="calcStr" @submit="handleSubmit"/>
     </div>
   </layout>
 </template>
@@ -41,6 +32,7 @@ import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import CategoryList from "./common/CategoryList.vue";
 import NumberPad from "./common/NumberPad.vue";
 import CalcStrBar from "./common/CalcStrBar.vue";
+import CalcPad from "@/views/record/common/withCalc";
 import {MoneyType, Category} from '@/store/modules/module-types';
 
 import {
@@ -59,73 +51,22 @@ import {
     CategoryList,
     NumberPad,
     CalcStrBar,
+    CalcPad
   },
 })
 export default class RecordAdd extends Vue {
   moneyType: MoneyType = 'expenditure'
-  left = '0'
-  right = ''
-  operator = ''
   selectedId = -1
+  calcStr = '0'
   curDate = new Date()
   @State(state => state.category.categoryList) categoryList!: Category[]
   @Action('record/add') addRecord!: Function
 
-  get calcStr() {
-    return this.left + this.operator + this.right
-  }
   get selectedCategoryList() {
     return this.categoryList.filter(item => item.moneyType === this.moneyType)
   }
   onManageClick() {
     this.$router.push('/category/manage')
-  }
-  getCalcResult() {
-    let result = 0
-    if (this.operator === '+') {
-      result = +this.left + +this.right
-    } else {
-      result = +this.left - +this.right
-    }
-    // 如果为.00，则说明为整数，可以去除
-    this.left = result.toFixed(2).replace(/\.00$/, '')
-    this.right = ''
-    this.operator = ''
-  }
-  handleOperator(val: Operator) {
-    if (this.right.length !== 0) {
-      this.getCalcResult()
-    }
-    this.operator = val
-  }
-  handleNumber(val: NumberStr) {
-    const reg = /\.\d{2,}$/
-    if (this.operator) {
-      if (reg.test(this.right)) return
-      if (this.right === '0') {
-        this.right = val
-      } else {
-        this.right += val
-      }
-    } else {
-      if (reg.test(this.left)) return
-      if (this.left === '0') {
-        this.left = val
-      } else {
-        this.left += val
-      }
-    }
-  }
-  handleDot() {
-    if (this.operator) {
-      if (this.right.indexOf('.') === -1) {
-        this.right += '.'
-      }
-    } else {
-      if (this.left.indexOf('.') === -1) {
-        this.left += '.'
-      }
-    }
   }
   validate() {
     if (this.selectedId === -1) {
@@ -134,11 +75,13 @@ export default class RecordAdd extends Vue {
     } else if (this.calcStr === '0') {
       this.$message({type: 'warning', message: '数值不能为0'})
       return false
+    } else if (parseFloat(this.calcStr) < 0) {
+      this.$message({type: 'warning', message: '数值不能为负'})
+      return false
     }
     return true
   }
   handleSubmit() {
-    this.getCalcResult()
     if (!this.validate()) {
       return
     }
@@ -148,14 +91,8 @@ export default class RecordAdd extends Vue {
       amount: +this.calcStr,
       createAt: this.curDate.toISOString()
     })
-    this.handleClear()
     this.$message({type: 'success', message: '添加成功', duration: 1000})
     this.$router.push('/record/detail')
-  }
-  handleClear() {
-    this.left = '0'
-    this.right = ''
-    this.operator = ''
   }
 }
 </script>

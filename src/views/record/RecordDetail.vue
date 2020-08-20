@@ -20,7 +20,7 @@
         </div>
       </div>
     </template>
-    <div class="detail">
+    <div class="detail" v-if="dateToRecord.length > 0">
       <div class="group-by-date" v-for="(item, index) in dateToRecord" :key="index">
         <div class="date-record-general">
           <span class="date">{{ getFormattedDate(item[0]) }}</span>
@@ -38,6 +38,9 @@
         </ul>
       </div>
     </div>
+    <div v-else>
+      当月暂无数据
+    </div>
     <pop-up v-model="showDatePicker" position="bottom">
       <DatePicker type="year-month" v-model="selectedTime" @ok="showDatePicker = !showDatePicker"/>
     </pop-up>
@@ -54,7 +57,8 @@ import Icon from "@/components/Icon/Icon.vue";
 import DatePicker from "@/components/DatePicker/DatePicker.vue";
 import dayjs from "dayjs";
 import {State} from "vuex-class";
-import {Category, CategoryState, MoneyRecord, MoneyRecordState, MoneyType} from "@/store/modules/module-types";
+import {Category, MoneyRecord, MoneyType} from "@/store/modules/module-types";
+import {getCategoryById} from "@/store/utils";
 
 @Component({
   components: {
@@ -120,12 +124,12 @@ export default class RecordDetail extends Vue {
   }
 
   getCategoryIcon(id: number) {
-    const category = this.categoryList.filter(category => category.id === id)[0]
+    const category = getCategoryById(this.categoryList, id)
     return category ? category.icon : ''
   }
 
   getCategoryName(id: number) {
-    const category = this.categoryList.filter(category => category.id === id)[0]
+    const category = getCategoryById(this.categoryList, id)
     return category ? category.name : ''
   }
 }
@@ -143,6 +147,7 @@ export default class RecordDetail extends Vue {
   display: flex;
   justify-content: space-between;
   padding: 20px 16px;
+
   .income,
   .time,
   .expenditure {
