@@ -38,7 +38,7 @@
         </ul>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="backup-message">
       当月暂无数据
     </div>
     <pop-up v-model="showDatePicker" position="bottom">
@@ -209,5 +209,11 @@ export default class RecordDetail extends Vue {
       }
     }
   }
+}
+.backup-message {
+  color: $grey-5;
+  margin-top: 20px;
+  font-size: 20px;
+  text-align: center;
 }
 </style>

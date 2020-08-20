@@ -15,7 +15,7 @@
       {{ dateStr }}&#9660;
     </div>
     <v-echarts class="charts" height="200px" :option="option" :listeners="echartsListeners"/>
-    <div v-if="categoryRankData.length === 0">暂无数据</div>
+    <div v-if="categoryRankData.length === 0" class="backup-message">暂无数据</div>
     <ol v-else class="category-rank-list">
       <li class="rank-list-item" v-for="item in categoryRankData" :key="item.category.id">
         <div class="icon-wrapper">
@@ -318,5 +318,11 @@ export default class Statistics extends Vue {
       }
     }
   }
+}
+.backup-message {
+  color: $grey-5;
+  margin-top: 20px;
+  font-size: 20px;
+  text-align: center;
 }
 </style>
