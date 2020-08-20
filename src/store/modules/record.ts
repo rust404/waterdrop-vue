@@ -6,22 +6,44 @@ const state: MoneyRecordState = {
   recordList: [],
 };
 
-const defaultRecordList = [{
-  "moneyType": "expenditure",
-  "categoryId": 1,
-  "amount": 99,
-  "createAt": "2020-08-16T09:33:05.620Z"
-}, {
-  "moneyType": "income",
-  "categoryId": 3,
-  "amount": 99,
-  "createAt": "2020-08-16T09:33:05.620Z"
-}, {
-  "moneyType": "income",
-  "categoryId": 3,
-  "amount": 89,
-  "createAt": "2020-08-14T09:33:05.620Z"
-}]
+const defaultRecordList: Omit<MoneyRecord, 'id'>[] = [
+  {
+    "moneyType": "expenditure",
+    "categoryId": 1,
+    "amount": 99,
+    "createAt": "2020-08-11T09:33:05.620Z"
+  },
+  {
+    "moneyType": "expenditure",
+    "categoryId": 6,
+    "amount": 34,
+    "createAt": "2020-08-16T09:33:05.620Z"
+  },
+  {
+    "moneyType": "expenditure",
+    "categoryId": 5,
+    "amount": 99,
+    "createAt": "2020-08-10T09:33:05.620Z"
+  },
+  {
+    "moneyType": "expenditure",
+    "categoryId": 4,
+    "amount": 20,
+    "createAt": "2020-08-10T09:33:05.620Z"
+  },
+  {
+    "moneyType": "income",
+    "categoryId": 3,
+    "amount": 99,
+    "createAt": "2020-08-13T09:33:05.620Z"
+  },
+  {
+    "moneyType": "income",
+    "categoryId": 3,
+    "amount": 88,
+    "createAt": "2020-08-14T09:33:05.620Z"
+  }
+]
 const mutations: MutationTree<MoneyRecordState> = {
   add(state, payload: Omit<MoneyRecord, "id">) {
     state.recordList.push({
@@ -72,7 +94,7 @@ const actions: ActionTree<MoneyRecordState, {}> = {
       return
     }
     defaultRecordList.forEach(({moneyType, categoryId, amount, createAt}) => {
-      dispatch('add' ,{
+      dispatch('add', {
         moneyType,
         categoryId,
         amount,

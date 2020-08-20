@@ -2,7 +2,7 @@ import { Category, CategoryState } from "./module-types";
 import {MutationTree, Module, ActionTree} from "vuex";
 import {generateCategoryId, saveMaxCategoryId} from "@/store/utils/generateCategoryId";
 
-const defaultCategoryList = [
+const defaultCategoryList: Omit<Category, 'id'>[] = [
   {
     name: "餐饮",
     icon: "canyin",
@@ -16,6 +16,26 @@ const defaultCategoryList = [
   {
     name: "理财",
     icon: "licai",
+    moneyType: "income",
+  },
+  {
+    name: "读书",
+    icon: "dushu",
+    moneyType: "expenditure",
+  },
+  {
+    name: "交通",
+    icon: "jiaotong",
+    moneyType: "expenditure",
+  },
+  {
+    name: "数码",
+    icon: "shuma",
+    moneyType: "expenditure",
+  },
+  {
+    name: "工资",
+    icon: "gongzi",
     moneyType: "income",
   },
 ]
