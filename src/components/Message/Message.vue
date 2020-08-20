@@ -20,7 +20,6 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import classNames from 'classnames';
 import {MessageItem, MessageType,  MessageOption} from './message-types';
 
 @Component
@@ -28,9 +27,10 @@ export default class Message extends Vue {
   messages: MessageItem[] = []
   animateDuration = 200
   messageClass(type: MessageType) {
-    return classNames('message-item', {
+    return {
+      'message-item': true,
       [type]: type
-    })
+    }
   }
   enter(el: HTMLElement) {
     const height = el.getBoundingClientRect().height

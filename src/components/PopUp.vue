@@ -21,7 +21,6 @@
 <script lang="ts">
 import {Component, Vue, Prop, Model} from 'vue-property-decorator'
 import Overlay from './Overlay.vue'
-import classNames from 'classnames'
 
 type PopupPosition = 'top' | 'left' | 'right' | 'bottom' | 'center'
 
@@ -36,9 +35,10 @@ export default class PopUp extends Vue {
   @Prop({default: 300}) readonly duration!: number
   @Prop() readonly height!: string
   get popupClass() {
-    return classNames('popup', {
+    return {
+      'popup': true,
       [this.position]: this.position
-    })
+    }
   }
   get animateName() {
     if (this.position !== 'center') {

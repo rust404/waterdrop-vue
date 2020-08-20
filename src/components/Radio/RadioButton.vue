@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import classNames from 'classnames';
 import RadioGroup from './RadioGroup.vue';
 
 @Component
@@ -26,9 +25,10 @@ export default class RadioButton extends Vue {
     return this.$parent as RadioGroup
   }
   get radioButtonClassName() {
-    return classNames('radio-button', {
+    return {
+      'radio-button': true,
       'is-active': this.label === this.value
-    })
+    }
   }
 
   get value() {

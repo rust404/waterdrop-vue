@@ -31,7 +31,6 @@ import TopBar from "@/components/TopBar.vue";
 import Icon from "@/components/Icon/Icon.vue";
 import {CategoryState} from "@/store/modules/module-types";
 import {CATEGORY_ICON_NAMES} from "@/assets/icon";
-import classNames from "classnames";
 import {Action, State} from "vuex-class";
 
 @Component({
@@ -69,9 +68,10 @@ export default class CategoryEdit extends Vue {
     this.$router.back()
   }
   getIconWrapperClass(iconName: string) {
-    return classNames('category-icon-wrapper', {
+    return  {
+      'category-icon-wrapper': true,
       'is-active': this.categoryIcon === iconName
-    })
+    }
   }
   validate() {
     if (this.categoryName.length === 0) {

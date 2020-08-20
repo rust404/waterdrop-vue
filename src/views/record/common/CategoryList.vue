@@ -39,7 +39,6 @@
 <script lang="ts">
 import {Vue, Component, Model, Prop} from "vue-property-decorator";
 import Icon from '@/components/Icon/Icon.vue';
-import classNames from 'classnames';
 import {Category} from "@/store/modules/module-types";
 
 
@@ -54,9 +53,10 @@ export default class CategoryList extends Vue {
   @Prop({type: String}) readonly type?: 'manage' | 'add'
 
   listItemClassName(category: Category) {
-    return classNames('category-list-item', {
+    return  {
+      'category-list-item': true,
       'is-active': this.selectedCategoryId === category.id
-    })
+    }
   }
   handleClick(id: number) {
     this.$emit('change', id)
