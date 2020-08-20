@@ -14,7 +14,7 @@ function withCalc(Comp?: any) {
   class Wrapper extends Vue {
     @Prop(Date) readonly date!: Date
     @Prop(String) readonly calc!: string
-    left = '0'
+    left = this.calc || '0'
     right = ''
     operator = ''
     @Watch('calcStr')
