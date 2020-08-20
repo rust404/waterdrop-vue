@@ -25,3 +25,20 @@ $map: (
     transition: transform 300ms;
   }
 }
+@each $direction, $translate in $map {
+  .router-slide-from-#{$direction}-enter {
+    opacity: 0;
+    transform: translate(#{$translate});
+  }
+  .router-slide-from-#{$direction}-leave-to {
+    opacity: 0;
+  }
+  .router-slide-from-#{$direction}-enter-active {
+    opacity: 1;
+    transition: transform 300ms;
+  }
+  .router-slide-from-#{$direction}-leave-active {
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+}

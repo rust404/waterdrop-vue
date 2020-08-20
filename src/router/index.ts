@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
+import VueRouter, {RouteConfig} from "vue-router";
 import RecordAdd from "@/views/record/RecordAdd.vue";
 import RecordDetail from "@/views/record/RecordDetail.vue";
 import RecordEdit from "@/views/record/RecordEdit.vue";
@@ -10,48 +10,31 @@ import NotFound from "@/views/NotFound.vue";
 import Statistics from "@/views/Statistics.vue";
 
 Vue.use(VueRouter);
-const RouterViewContainer = {
-  render(h: Vue.CreateElement) {
-    return h("router-view");
-  },
-};
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/record",
-    component: RouterViewContainer,
-    children: [
-      {
-        path: "detail",
-        component: RecordDetail,
-      },
-      {
-        path: "edit/:id",
-        component: RecordEdit,
-      },
-      {
-        path: "add",
-        component: RecordAdd,
-      },
-    ],
+    path: "/record/detail",
+    component: RecordDetail,
   },
   {
-    path: "/category",
-    component: RouterViewContainer,
-    children: [
-      {
-        path: "edit/:id",
-        component: CategoryEdit,
-      },
-      {
-        path: "add/:type",
-        component: CategoryAdd,
-      },
-      {
-        path: "manage",
-        component: CategoryManage,
-      },
-    ],
+    path: "/record/edit/:id",
+    component: RecordEdit,
+  },
+  {
+    path: "/record/add",
+    component: RecordAdd,
+  },
+  {
+    path: "/category/edit/:id",
+    component: CategoryEdit,
+  },
+  {
+    path: "/category/add/:type",
+    component: CategoryAdd,
+  },
+  {
+    path: "/category/manage",
+    component: CategoryManage,
   },
   {
     path: "/statistics",
