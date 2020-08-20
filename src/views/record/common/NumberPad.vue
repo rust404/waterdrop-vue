@@ -92,10 +92,11 @@ $gap: 10px;
   flex-wrap: wrap;
   padding: $gap / 2;
   > button {
-    font-size: 16px;
+    box-sizing: content-box;
     display: inline-block;
-    width: calc((100vw - #{$gap * 5}) / 4);
+    width: calc((100% - #{$gap * 5}) / 4);
     margin:$gap / 2;
+    font-size: 16px;
     line-height: 2;
     background: #fff;
     border: 1px solid #000;

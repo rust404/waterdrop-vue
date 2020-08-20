@@ -3,22 +3,31 @@
     <transition class="router-transition-wrapper" :name="transitionName">
       <router-view class="router-view"/>
     </transition>
+    <pop-up v-model="showQrcode" style="text-align: center">
+      <img src="./assets/qrcode.png"/>
+      <div>为了保证最好的用户体验<br/>建议扫描二维码在手机上查看</div>
+    </pop-up>
   </div>
 </template>
 
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator'
 import {Action} from "vuex-class";
-
-
-@Component
+import PopUp from "@/components/PopUp.vue";
+@Component({
+  components: {PopUp}
+})
 export default class App extends Vue {
   @Action('category/load') readonly loadCategory!: Function
   @Action('record/load') readonly loadRecord!: Function
   transitionName = ''
   pathHistories: string[] = [this.$route.path]
+  showQrcode = false
 
   created() {
+    if (document.documentElement.clientWidth > 500) {
+      this.showQrcode = true
+    }
     this.$router.beforeEach((to, from, next) => {
       function isNavigateBetweenBottomBar(path1: string, path2: string) {
         const arr = ['/record/add', '/statistics', '/record/detail']
@@ -52,7 +61,13 @@ export default class App extends Vue {
 @import "~@/style/reset.scss";
 @import "~@/style/animation.scss";
 
+body {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 #app {
+  position: relative;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

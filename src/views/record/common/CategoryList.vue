@@ -79,12 +79,13 @@ $gap: 20px;
   padding: $gap / 2;
   align-items: flex-start;
   .category-list-item {
-    width: 50px;
-    margin: $gap / 2;
+    width: 20%;
+    margin: $gap / 2 0;
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     .category-icon-wrapper {
       width: 50px;
       height: 50px;

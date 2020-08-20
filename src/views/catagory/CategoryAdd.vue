@@ -141,5 +141,8 @@ export default class CategoryAdd extends Vue {
   .category-icon-wrapper {
     margin: 10px 10px;
   }
+  > li {
+    width: 20%;
+  }
 }
 </style>
