@@ -164,6 +164,10 @@ export default class Statistics extends Vue {
       legend: {
         selectedMode: 'single',
         top: 10,
+        icon: 'roundRect',
+        textStyle: {
+          fontSize: 16,
+        }
       },
       xAxis: {
         type: 'category',
