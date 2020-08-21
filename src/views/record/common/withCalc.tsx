@@ -67,10 +67,12 @@ function withCalc(Comp?: any) {
     handleDot() {
       if (this.operator) {
         if (this.right.indexOf('.') === -1) {
+          if (this.right.length === 0) this.right = '0'
           this.right += '.'
         }
       } else {
         if (this.left.indexOf('.') === -1) {
+          if (this.left.length === 0) this.right = '0'
           this.left += '.'
         }
       }
