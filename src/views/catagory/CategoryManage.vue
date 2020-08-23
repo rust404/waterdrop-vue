@@ -20,8 +20,9 @@ import Icon from "@/components/Icon/Icon.vue";
 import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import RadioButton from "@/components/Radio/RadioButton.vue";
 import CategoryList from "@/views/record/common/CategoryList.vue";
-import {Category, CategoryState, MoneyType} from "@/store/modules/module-types";
+import {Category, MoneyType} from "@/store/modules/module-types";
 import {State} from "vuex-class";
+import {getCategories} from "@/store/utils";
 
 @Component({
   components: {
@@ -43,7 +44,9 @@ export default class CategoryManage extends Vue {
     this.$router.push(`/category/add/${this.moneyType}`)
   }
   get selectedCategoryList() {
-    return this.categoryList.filter(category => category.moneyType === this.moneyType)
+    return getCategories(this.categoryList, {
+      moneyType: this.moneyType
+    })
   }
 }
 </script>

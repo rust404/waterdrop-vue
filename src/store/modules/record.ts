@@ -1,6 +1,7 @@
 import {MoneyRecord, MoneyRecordState} from "./module-types";
 import {MutationTree, Module, ActionTree} from "vuex";
 import {generateRecordId, saveMaxRecordId} from "@/store/utils/generateRecordId";
+import {getRecords} from "@/store/utils";
 
 const state: MoneyRecordState = {
   recordList: [],
@@ -60,7 +61,9 @@ const mutations: MutationTree<MoneyRecordState> = {
     state,
     payload: Pick<MoneyRecord, "id"> & Partial<Omit<MoneyRecord, "id">>
   ) {
-    const record = state.recordList.filter((item) => item.id == payload.id)[0];
+    const record = getRecords(state.recordList, {
+      id: payload.id
+    })[0]
     if (record) {
       const index = state.recordList.indexOf(record);
       state.recordList.splice(index, 1, {

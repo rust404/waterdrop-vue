@@ -1,6 +1,7 @@
 import { Category, CategoryState } from "./module-types";
 import {MutationTree, Module, ActionTree} from "vuex";
 import {generateCategoryId, saveMaxCategoryId} from "@/store/utils/generateCategoryId";
+import {getCategoryById} from "@/store/utils";
 
 const defaultCategoryList: Omit<Category, 'id'>[] = [
   {
@@ -57,9 +58,7 @@ const mutations: MutationTree<CategoryState> = {
     });
   },
   edit(state, payload: Pick<Category, "id"> & Partial<Omit<Category, "id">>) {
-    const category = state.categoryList.filter(
-      (item) => item.id == payload.id
-    )[0];
+    const category = getCategoryById(state.categoryList, payload.id)
     if (category) {
       const index = state.categoryList.indexOf(category);
       state.categoryList.splice(index, 1, {

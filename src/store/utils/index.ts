@@ -1,4 +1,4 @@
-import {Category, IndexedMoneyRecord, MoneyRecord} from "@/store/modules/module-types";
+import {Category, IndexedCategory, IndexedMoneyRecord, MoneyRecord} from "@/store/modules/module-types";
 import dayjs from "dayjs";
 
 function getRecordsByMonth(records: MoneyRecord[], time: Date) {
@@ -25,6 +25,15 @@ function getRecords(records: IndexedMoneyRecord[], option: Partial<IndexedMoneyR
 function getCategoryById(categories: Category[], id: number) {
   return categories.filter(category => category.id === id)[0]
 }
+function getCategories(categories: IndexedCategory[], option: Partial<IndexedCategory>) {
+  return categories.filter(category => {
+    for (const key in option) {
+      if (!Object.prototype.hasOwnProperty.call(option, key)) continue
+      if (category[key] !== option[key]) return false
+    }
+    return true
+  })
+}
 
 
 export {
@@ -32,4 +41,5 @@ export {
   getRecordsByYear,
   getCategoryById,
   getRecords,
+  getCategories,
 }

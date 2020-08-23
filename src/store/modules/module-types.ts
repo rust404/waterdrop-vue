@@ -5,6 +5,10 @@ export interface Category {
   moneyType: MoneyType;
 }
 
+export interface IndexedCategory extends Category {
+  [index: string]: any;
+}
+
 export type MoneyType = "income" | "expenditure";
 
 export interface MoneyRecord {

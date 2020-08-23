@@ -22,6 +22,7 @@ import IconList from "@/views/catagory/IconList.vue";
 import CategoryInfo from "@/views/catagory/CategoryInfo.vue";
 import {Category} from "@/store/modules/module-types";
 import {Action, State} from "vuex-class";
+import {getCategoryById} from "@/store/utils";
 
 @Component({
   components: {
@@ -38,7 +39,7 @@ export default class CategoryEdit extends Vue {
   categoryName = ''
   categoryIcon = ''
   created() {
-    const category = this.categoryList.filter(category => category.id === Number(this.$route.params.id))[0]
+    const category = getCategoryById(this.categoryList, Number(this.$route.params.id))
     if (!category) {
       this.$router.push('/')
     }

@@ -39,6 +39,7 @@ import {
   State,
   Action,
 } from 'vuex-class'
+import {getCategories} from "@/store/utils";
 
 @Component({
   components: {
@@ -63,7 +64,9 @@ export default class RecordAdd extends Vue {
   @Action('record/add') addRecord!: Function
 
   get selectedCategoryList() {
-    return this.categoryList.filter(item => item.moneyType === this.moneyType)
+    return getCategories(this.categoryList, {
+      moneyType: this.moneyType
+    })
   }
   onManageClick() {
     this.$router.push('/category/manage')

@@ -36,6 +36,7 @@ import CalcPad from "@/views/record/common/withCalc";
 import {Category, MoneyRecord, MoneyType} from '@/store/modules/module-types';
 
 import {Action, State,} from 'vuex-class'
+import {getRecords} from "@/store/utils";
 
 @Component({
   components: {
@@ -62,9 +63,10 @@ export default class RecordAdd extends Vue {
   calcStr = ''
 
   created() {
-    const record = this.recordList.filter(record => record.id === parseInt(this.$route.params.id))[0]
+    const record = getRecords(this.recordList, {id: Number(this.$route.params.id)})[0]
     if (!record) {
       this.$router.push('/')
+      return
     }
     this.selectedId = record.categoryId
     this.moneyType = record.moneyType
@@ -100,7 +102,7 @@ export default class RecordAdd extends Vue {
     return true
   }
 
-  handleSubmit(date: Date) {
+  handleSubmit() {
     if (!this.validate()) {
       return
     }
