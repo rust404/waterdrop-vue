@@ -37,9 +37,8 @@ import {MoneyType, Category} from '@/store/modules/module-types';
 
 import {
   State,
-  Action,
+  Action, Getter,
 } from 'vuex-class'
-import {getCategories} from "@/store/utils";
 
 @Component({
   components: {
@@ -56,15 +55,17 @@ import {getCategories} from "@/store/utils";
   },
 })
 export default class RecordAdd extends Vue {
+  @State(state => state.category.categoryList) readonly categoryList!: Category[]
+  @Action('record/add') readonly addRecord!: Function
+  @Getter('category/getCategories') readonly getCategories!: Function
+
   moneyType: MoneyType = 'expenditure'
   selectedId = -1
   calcStr = '0'
   curDate = new Date()
-  @State(state => state.category.categoryList) categoryList!: Category[]
-  @Action('record/add') addRecord!: Function
 
   get selectedCategoryList() {
-    return getCategories(this.categoryList, {
+    return this.getCategories({
       moneyType: this.moneyType
     })
   }

@@ -35,8 +35,7 @@ import CalcStrBar from "./common/CalcStrBar.vue";
 import CalcPad from "@/views/record/common/withCalc";
 import {Category, MoneyRecord, MoneyType} from '@/store/modules/module-types';
 
-import {Action, State,} from 'vuex-class'
-import {getRecords} from "@/store/utils";
+import {Action, Getter, State,} from 'vuex-class'
 
 @Component({
   components: {
@@ -57,13 +56,15 @@ export default class RecordAdd extends Vue {
   @State(state => state.record.recordList) recordList!: MoneyRecord[]
   @Action('record/edit') editRecord!: Function
   @Action('record/delete') deleteRecord!: Function
+  @Getter('record/getRecords') readonly getRecords!: Function
+
   moneyType: MoneyType = 'expenditure'
   selectedId = -1
   curDate: Date = new Date
   calcStr = ''
 
   created() {
-    const record = getRecords(this.recordList, {id: Number(this.$route.params.id)})[0]
+    const record = this.getRecords({id: Number(this.$route.params.id)})[0]
     if (!record) {
       this.$router.push('/')
       return

@@ -21,8 +21,7 @@ import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import RadioButton from "@/components/Radio/RadioButton.vue";
 import CategoryList from "@/views/record/common/CategoryList.vue";
 import {Category, MoneyType} from "@/store/modules/module-types";
-import {State} from "vuex-class";
-import {getCategories} from "@/store/utils";
+import {Getter, State} from "vuex-class";
 
 @Component({
   components: {
@@ -35,8 +34,10 @@ import {getCategories} from "@/store/utils";
   }
 })
 export default class CategoryManage extends Vue {
-  moneyType: MoneyType = 'expenditure'
   @State(state => state.category.categoryList) categoryList!: Category[]
+  @Getter('category/getCategories') readonly getCategories!: Function
+
+  moneyType: MoneyType = 'expenditure'
   onChange(id: number) {
     this.$router.push(`/category/edit/${id}`)
   }
@@ -44,7 +45,7 @@ export default class CategoryManage extends Vue {
     this.$router.push(`/category/add/${this.moneyType}`)
   }
   get selectedCategoryList() {
-    return getCategories(this.categoryList, {
+    return this.getCategories({
       moneyType: this.moneyType
     })
   }

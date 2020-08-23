@@ -1,15 +1,9 @@
 import {Category, IndexedCategory, IndexedMoneyRecord, MoneyRecord} from "@/store/modules/module-types";
 import dayjs from "dayjs";
 
-function getRecordsByMonth(records: MoneyRecord[], time: Date) {
+function getRecordsByTime(records: MoneyRecord[], time: Date, unit: dayjs.UnitType) {
   return records.filter(record => {
-    return dayjs(time).isSame(record.createAt, 'month')
-  })
-}
-
-function getRecordsByYear(records: MoneyRecord[], time: Date) {
-  return records.filter(record => {
-    return dayjs(time).isSame(record.createAt, 'year')
+    return dayjs(time).isSame(record.createAt, unit)
   })
 }
 
@@ -22,9 +16,11 @@ function getRecords(records: IndexedMoneyRecord[], option: Partial<IndexedMoneyR
     return true
   })
 }
+
 function getCategoryById(categories: Category[], id: number) {
   return categories.filter(category => category.id === id)[0]
 }
+
 function getCategories(categories: IndexedCategory[], option: Partial<IndexedCategory>) {
   return categories.filter(category => {
     for (const key in option) {
@@ -37,8 +33,7 @@ function getCategories(categories: IndexedCategory[], option: Partial<IndexedCat
 
 
 export {
-  getRecordsByMonth,
-  getRecordsByYear,
+  getRecordsByTime,
   getCategoryById,
   getRecords,
   getCategories,

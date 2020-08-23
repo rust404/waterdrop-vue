@@ -1,7 +1,7 @@
-import { Category, CategoryState } from "./module-types";
-import {MutationTree, Module, ActionTree} from "vuex";
+import {Category, CategoryState, IndexedCategory} from "./module-types";
+import {MutationTree, Module, ActionTree, GetterTree} from "vuex";
 import {generateCategoryId, saveMaxCategoryId} from "@/store/utils/generateCategoryId";
-import {getCategoryById} from "@/store/utils";
+import {getCategories, getCategoryById} from "@/store/utils";
 
 const defaultCategoryList: Omit<Category, 'id'>[] = [
   {
@@ -102,9 +102,27 @@ const actions: ActionTree<CategoryState, {}> = {
   }
 }
 
+const getters: GetterTree<CategoryState, {}> = {
+  getCategoryById: state => (id: number) => {
+    return getCategoryById(state.categoryList, id)
+  },
+  getCategories: state => (option: Partial<IndexedCategory>) => {
+    return getCategories(state.categoryList, option)
+  },
+  getCategoryIcon: (state, getters) => (id: number) => {
+    const category = getters.getCategoryById(id)
+    return category ? category.icon : ''
+  },
+  getCategoryName: (state, getters) => (id: number) => {
+    const category = getters.getCategoryById(id)
+    return category ? category.name : ''
+  }
+}
+
 export const category: Module<CategoryState, {}> = {
   namespaced: true,
   state,
   mutations,
   actions,
+  getters,
 };

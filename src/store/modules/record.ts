@@ -1,7 +1,8 @@
-import {MoneyRecord, MoneyRecordState} from "./module-types";
-import {MutationTree, Module, ActionTree} from "vuex";
+import {IndexedMoneyRecord, MoneyRecord, MoneyRecordState} from "./module-types";
+import {MutationTree, Module, ActionTree, GetterTree} from "vuex";
 import {generateRecordId, saveMaxRecordId} from "@/store/utils/generateRecordId";
-import {getRecords} from "@/store/utils";
+import {getRecords, getRecordsByTime} from "@/store/utils";
+import dayjs from "dayjs";
 
 const state: MoneyRecordState = {
   recordList: [],
@@ -107,9 +108,25 @@ const actions: ActionTree<MoneyRecordState, {}> = {
   }
 }
 
+const getters: GetterTree<MoneyRecordState, {}> = {
+  getRecords: state => (option: Partial<IndexedMoneyRecord>) => {
+    return getRecords(state.recordList, option)
+  },
+  getRecordsByMonth: state => (time: Date) => {
+    return getRecordsByTime(state.recordList, time, 'month')
+  },
+  getRecordsByYear: state => (time: Date) => {
+    return getRecordsByTime(state.recordList, time, 'year')
+  },
+  getRecordsByTime: state => (time: Date, unit: dayjs.UnitType) => {
+    return getRecordsByTime(state.recordList, time, unit)
+  }
+}
+
 export const record: Module<MoneyRecordState, {}> = {
   namespaced: true,
   state,
   mutations,
   actions,
+  getters,
 };

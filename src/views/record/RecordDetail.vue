@@ -56,9 +56,8 @@ import PopUp from "@/components/PopUp.vue";
 import Icon from "@/components/Icon/Icon.vue";
 import DatePicker from "@/components/DatePicker/DatePicker.vue";
 import dayjs from "dayjs";
-import {State} from "vuex-class";
+import {Getter, State} from "vuex-class";
 import {Category, MoneyRecord, MoneyType} from "@/store/modules/module-types";
-import {getCategoryById, getRecordsByMonth} from "@/store/utils";
 
 @Component({
   components: {
@@ -73,6 +72,10 @@ import {getCategoryById, getRecordsByMonth} from "@/store/utils";
 export default class RecordDetail extends Vue {
   @State(state => state.category.categoryList) categoryList!: Category[]
   @State(state => state.record.recordList) recordList!: MoneyRecord[]
+  @Getter('category/getCategoryById') readonly getCategoryById!: Function
+  @Getter('category/getCategoryIcon') readonly getCategoryIcon!: Function
+  @Getter('category/getCategoryName') readonly getCategoryName!: Function
+  @Getter('record/getRecordsByTime') readonly getRecordsByTime!: Function
   selectedTime = new Date()
   showDatePicker = false
 
@@ -85,7 +88,7 @@ export default class RecordDetail extends Vue {
   }
 
   get selectedRecords() {
-    return getRecordsByMonth(this.recordList, this.selectedTime)
+    return this.getRecordsByTime(this.selectedTime, 'month') as MoneyRecord[]
   }
 
   get sortedDateAndRecordGroup(): [string, MoneyRecord[]][] {
@@ -118,16 +121,6 @@ export default class RecordDetail extends Vue {
   getFormattedDate(date: Date | string | number) {
     const str = '日一二三四五六'
     return dayjs(date).format('M月D日 星期') + str[dayjs(date).day()]
-  }
-
-  getCategoryIcon(id: number) {
-    const category = getCategoryById(this.categoryList, id)
-    return category ? category.icon : ''
-  }
-
-  getCategoryName(id: number) {
-    const category = getCategoryById(this.categoryList, id)
-    return category ? category.name : ''
   }
 }
 

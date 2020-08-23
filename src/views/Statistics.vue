@@ -52,7 +52,7 @@ import dayjs from "dayjs";
 import {Category, MoneyRecord, MoneyType} from "@/store/modules/module-types";
 import {State} from "vuex-class";
 import {EChartOption} from "echarts";
-import {getCategoryById, getRecords, getRecordsByMonth, getRecordsByYear} from "@/store/utils";
+import {getCategoryById, getRecords, getRecordsByTime} from "@/store/utils";
 
 type CategoryToRecordsMap = { [categoryId: number]: MoneyRecord[] }
 type CategoryToSumMap = { [categoryId: number]: number }
@@ -100,7 +100,7 @@ export default class Statistics extends Vue {
   get categoryRankData() {
     let records = this.recordList
     records = this.dateType === 'year-month' ?
-        getRecordsByMonth(records, this.curDate) : getRecordsByYear(records, this.curDate)
+        getRecordsByTime(records, this.curDate, 'month') : getRecordsByTime(records, this.curDate, 'year')
     records = getRecords(records, {
       moneyType: this.moneyType
     })
@@ -141,7 +141,7 @@ export default class Statistics extends Vue {
           fontSize: 12,
         },
         confine: true,
-        position: function(point, params) {
+        position: function (point) {
           return [point[0], '30%']
         }
       },
@@ -207,7 +207,7 @@ export default class Statistics extends Vue {
   }
 
   getSumByDates(records: MoneyRecord[], date: Date) {
-    records = getRecordsByMonth(records, date)
+    records = getRecordsByTime(records, date, 'month')
     const ret = {
       income: this.dateArr.map(_ => 0),
       expenditure: this.dateArr.map(_ => 0)
@@ -219,7 +219,7 @@ export default class Statistics extends Vue {
   }
 
   getSumForMonths(records: MoneyRecord[], date: Date) {
-    records = getRecordsByYear(records, date)
+    records = getRecordsByTime(records, date, 'year')
     const ret: {
       income: number[];
       expenditure: number[];
@@ -323,6 +323,7 @@ export default class Statistics extends Vue {
     }
   }
 }
+
 .backup-message {
   color: $grey-5;
   margin-top: 20px;

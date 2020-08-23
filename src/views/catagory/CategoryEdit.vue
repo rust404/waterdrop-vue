@@ -21,8 +21,7 @@ import Icon from "@/components/Icon/Icon.vue";
 import IconList from "@/views/catagory/IconList.vue";
 import CategoryInfo from "@/views/catagory/CategoryInfo.vue";
 import {Category} from "@/store/modules/module-types";
-import {Action, State} from "vuex-class";
-import {getCategoryById} from "@/store/utils";
+import {Action, Getter, State} from "vuex-class";
 
 @Component({
   components: {
@@ -36,10 +35,11 @@ import {getCategoryById} from "@/store/utils";
 export default class CategoryEdit extends Vue {
   @State(state => state.category.categoryList) readonly categoryList!: Category[]
   @Action('category/edit') readonly categoryEdit!: Function
+  @Getter('category/getCategoryById') readonly getCategoryById!: Function
   categoryName = ''
   categoryIcon = ''
   created() {
-    const category = getCategoryById(this.categoryList, Number(this.$route.params.id))
+    const category = this.getCategoryById(Number(this.$route.params.id))
     if (!category) {
       this.$router.push('/')
     }
