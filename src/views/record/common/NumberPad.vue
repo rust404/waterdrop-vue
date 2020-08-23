@@ -41,7 +41,7 @@ type NumberPadHandlerVal = Operator | NumberStr | 'submit' | 'date' | 'clear' | 
 })
 export default class NumberPad extends Vue {
   @Model('input:date', {type: Date}) readonly date!: Date
-  @Prop() readonly showEqual!: boolean
+  @Prop(Boolean) readonly showEqual!: boolean
   curDate = this.date || new Date()
   showDatePicker = false
 
@@ -51,7 +51,7 @@ export default class NumberPad extends Vue {
 
   @Watch('curDate')
   onDateChange(newVal: Date) {
-    this.$emit('input:date', this.curDate)
+    this.$emit('input:date', newVal)
   }
 
   onClick(e: {target: HTMLInputElement}) {

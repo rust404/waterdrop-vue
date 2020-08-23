@@ -30,10 +30,10 @@ type PopupPosition = 'top' | 'left' | 'right' | 'bottom' | 'center'
   }
 })
 export default class PopUp extends Vue {
-  @Model('change', { type: Boolean }) readonly show!: boolean
+  @Model('change', { type: Boolean, required: true }) readonly show!: boolean
   @Prop({default: 'center'}) readonly position!: PopupPosition
   @Prop({default: 300}) readonly duration!: number
-  @Prop() readonly height!: string
+  @Prop(String) readonly height?: string
   get popupClass() {
     return {
       'popup': true,

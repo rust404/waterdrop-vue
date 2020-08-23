@@ -15,10 +15,10 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component
 export default class Overlay extends Vue {
-  @Prop({default: false}) readonly show!: boolean
-  @Prop({default: 0}) readonly duration!: boolean
-  @Prop({default: 'body'}) readonly container!: string
-  @Prop() readonly animation!: string
+  @Prop({default: false, type: Boolean}) readonly show!: boolean
+  @Prop({default: 0, type: Number}) readonly duration!: number
+  @Prop({default: 'body', type: String}) readonly container!: string
+  @Prop(String) readonly animation!: string
 
   onClick(e: Event) {
     this.$emit('click', e)

@@ -9,7 +9,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class CalcStrBar extends Vue {
-  @Prop() calcStr!: string
+  @Prop(String) calcStr!: string
 }
 </script>
 

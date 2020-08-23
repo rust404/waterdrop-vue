@@ -18,8 +18,8 @@ importAll(require.context("../../assets/icon", true, /\.svg$/));
 
 @Component
 export default class Icon extends Vue {
-  @Prop() readonly name!: string;
-  @Prop() readonly size!: number;
+  @Prop({required: true, type: String}) readonly name!: string;
+  @Prop(Number) readonly size!: number;
 }
 </script>
 

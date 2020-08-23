@@ -24,7 +24,7 @@
     </li>
     <li
         v-if="type === 'add'"
-        key="setting"
+        key="add"
         @click="handleAdd"
         class="category-list-item"
     >
@@ -49,7 +49,7 @@ import {Category} from "@/store/modules/module-types";
 })
 export default class CategoryList extends Vue {
   @Model('change', { type: Number }) readonly selectedCategoryId!: number;
-  @Prop() readonly listData!: Category[];
+  @Prop(Array) readonly listData!: Category[];
   @Prop({type: String}) readonly type?: 'manage' | 'add'
 
   listItemClassName(category: Category) {

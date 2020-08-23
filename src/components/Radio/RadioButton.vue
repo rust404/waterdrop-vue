@@ -18,7 +18,7 @@ import RadioGroup from './RadioGroup.vue';
 
 @Component
 export default class RadioButton extends Vue {
-  @Prop() label!: string
+  @Prop(String) label!: string
 
   get _radioGroup() {
     // TODO
