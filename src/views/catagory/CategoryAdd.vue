@@ -35,7 +35,7 @@ import {Action, State} from "vuex-class";
 })
 export default class CategoryAdd extends Vue {
   @State(state => state.category.categoryList) readonly categoryList!: Category[]
-  @Action('category/add') readonly categoryAdd!: Function
+  @Action('category/add') readonly categoryAdd!: (payload: Omit<Category, "id">) => void
   iconList = CATEGORY_ICON_NAMES
   categoryName = ''
   categoryIcon = CATEGORY_ICON_NAMES[0]
@@ -44,7 +44,7 @@ export default class CategoryAdd extends Vue {
     if (!this.validate()) return
     this.categoryAdd({
       icon: this.categoryIcon,
-      moneyType: this.$route.params.type,
+      moneyType: this.$route.params.type as MoneyType,
       name: this.categoryName
     })
     this.$message({type: 'success', message: '添加分类成功'})

@@ -20,7 +20,7 @@ import Icon from "@/components/Icon/Icon.vue";
 import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import RadioButton from "@/components/Radio/RadioButton.vue";
 import CategoryList from "@/views/record/common/CategoryList.vue";
-import {Category, MoneyType} from "@/store/modules/module-types";
+import {Category, IndexedCategory, MoneyType} from "@/store/modules/module-types";
 import {Getter, State} from "vuex-class";
 
 @Component({
@@ -35,7 +35,7 @@ import {Getter, State} from "vuex-class";
 })
 export default class CategoryManage extends Vue {
   @State(state => state.category.categoryList) categoryList!: Category[]
-  @Getter('category/getCategories') readonly getCategories!: Function
+  @Getter('category/getCategories') readonly getCategories!: (option: Partial<IndexedCategory>) => Category[]
 
   moneyType: MoneyType = 'expenditure'
   onChange(id: number) {

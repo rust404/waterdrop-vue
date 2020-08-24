@@ -34,8 +34,8 @@ import {Action, Getter, State} from "vuex-class";
 })
 export default class CategoryEdit extends Vue {
   @State(state => state.category.categoryList) readonly categoryList!: Category[]
-  @Action('category/edit') readonly categoryEdit!: Function
-  @Getter('category/getCategoryById') readonly getCategoryById!: Function
+  @Action('category/edit') readonly categoryEdit!: (payload: Pick<Category, "id"> & Partial<Omit<Category, "id">>) => void
+  @Getter('category/getCategoryById') readonly getCategoryById!: (id: number) => Category
   categoryName = ''
   categoryIcon = ''
   created() {

@@ -33,7 +33,7 @@ import CategoryList from "./common/CategoryList.vue";
 import NumberPad from "./common/NumberPad.vue";
 import CalcStrBar from "./common/CalcStrBar.vue";
 import CalcPad from "@/views/record/common/withCalc";
-import {Category, MoneyRecord, MoneyType} from '@/store/modules/module-types';
+import {Category, IndexedMoneyRecord, MoneyRecord, MoneyType} from '@/store/modules/module-types';
 
 import {Action, Getter, State,} from 'vuex-class'
 
@@ -54,9 +54,9 @@ import {Action, Getter, State,} from 'vuex-class'
 export default class RecordAdd extends Vue {
   @State(state => state.category.categoryList) categoryList!: Category[]
   @State(state => state.record.recordList) recordList!: MoneyRecord[]
-  @Action('record/edit') editRecord!: Function
-  @Action('record/delete') deleteRecord!: Function
-  @Getter('record/getRecords') readonly getRecords!: Function
+  @Action('record/edit') editRecord!: (payload: Pick<MoneyRecord, "id"> & Partial<Omit<MoneyRecord, "id">>) => void
+  @Action('record/delete') deleteRecord!: (id: number) => void
+  @Getter('record/getRecords') readonly getRecords!: (option: Partial<IndexedMoneyRecord>) => MoneyRecord[]
 
   moneyType: MoneyType = 'expenditure'
   selectedId = -1

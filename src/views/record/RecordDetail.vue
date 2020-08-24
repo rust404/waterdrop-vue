@@ -72,10 +72,10 @@ import {Category, MoneyRecord, MoneyType} from "@/store/modules/module-types";
 export default class RecordDetail extends Vue {
   @State(state => state.category.categoryList) categoryList!: Category[]
   @State(state => state.record.recordList) recordList!: MoneyRecord[]
-  @Getter('category/getCategoryById') readonly getCategoryById!: Function
-  @Getter('category/getCategoryIcon') readonly getCategoryIcon!: Function
-  @Getter('category/getCategoryName') readonly getCategoryName!: Function
-  @Getter('record/getRecordsByTime') readonly getRecordsByTime!: Function
+  @Getter('category/getCategoryById') readonly getCategoryById!: (id: number) => string
+  @Getter('category/getCategoryIcon') readonly getCategoryIcon!: (id: number) => string
+  @Getter('category/getCategoryName') readonly getCategoryName!: (id: number) => string
+  @Getter('record/getRecordsByTime') readonly getRecordsByTime!: (time: Date, unit: dayjs.UnitType) => MoneyRecord[]
   selectedTime = new Date()
   showDatePicker = false
 

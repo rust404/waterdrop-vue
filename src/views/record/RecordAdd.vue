@@ -33,7 +33,7 @@ import CategoryList from "./common/CategoryList.vue";
 import NumberPad from "./common/NumberPad.vue";
 import CalcStrBar from "./common/CalcStrBar.vue";
 import CalcPad from "@/views/record/common/withCalc";
-import {MoneyType, Category} from '@/store/modules/module-types';
+import {MoneyType, Category, MoneyRecord, IndexedCategory} from '@/store/modules/module-types';
 
 import {
   State,
@@ -56,8 +56,8 @@ import {
 })
 export default class RecordAdd extends Vue {
   @State(state => state.category.categoryList) readonly categoryList!: Category[]
-  @Action('record/add') readonly addRecord!: Function
-  @Getter('category/getCategories') readonly getCategories!: Function
+  @Action('record/add') readonly addRecord!: (payload: Omit<MoneyRecord, "id">) => void
+  @Getter('category/getCategories') readonly getCategories!: (option: Partial<IndexedCategory>) => Category[]
 
   moneyType: MoneyType = 'expenditure'
   selectedId = -1
