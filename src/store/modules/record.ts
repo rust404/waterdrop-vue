@@ -1,4 +1,3 @@
-import {IndexedMoneyRecord, MoneyRecord, MoneyRecordState} from "./module-types";
 import {MutationTree, Module, ActionTree, GetterTree} from "vuex";
 import {generateRecordId, saveMaxRecordId} from "@/store/utils/generateRecordId";
 import {getRecords, getRecordsByTime} from "@/store/utils";

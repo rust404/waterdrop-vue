@@ -39,7 +39,6 @@
 <script lang="ts">
 import {Vue, Component, Model, Prop} from "vue-property-decorator";
 import Icon from '@/components/Icon/Icon.vue';
-import {Category} from "@/store/modules/module-types";
 
 
 @Component({

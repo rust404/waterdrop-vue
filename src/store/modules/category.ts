@@ -1,4 +1,3 @@
-import {Category, CategoryState, IndexedCategory} from "./module-types";
 import {MutationTree, Module, ActionTree, GetterTree} from "vuex";
 import {generateCategoryId, saveMaxCategoryId} from "@/store/utils/generateCategoryId";
 import {getCategories, getCategoryById} from "@/store/utils";

@@ -57,7 +57,6 @@ import Icon from "@/components/Icon/Icon.vue";
 import DatePicker from "@/components/DatePicker/DatePicker.vue";
 import dayjs from "dayjs";
 import {Getter, State} from "vuex-class";
-import {Category, MoneyRecord, MoneyType} from "@/store/modules/module-types";
 
 @Component({
   components: {

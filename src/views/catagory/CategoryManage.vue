@@ -20,7 +20,6 @@ import Icon from "@/components/Icon/Icon.vue";
 import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import RadioButton from "@/components/Radio/RadioButton.vue";
 import CategoryList from "@/views/record/common/CategoryList.vue";
-import {Category, IndexedCategory, MoneyType} from "@/store/modules/module-types";
 import {Getter, State} from "vuex-class";
 
 @Component({

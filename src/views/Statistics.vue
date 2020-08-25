@@ -49,7 +49,6 @@ import RadioGroup from "@/components/Radio/RadioGroup.vue";
 import Icon from "@/components/Icon/Icon.vue";
 import VEcharts from "@/components/VEcharts.vue";
 import dayjs from "dayjs";
-import {Category, MoneyRecord, MoneyType} from "@/store/modules/module-types";
 import {State} from "vuex-class";
 import {EChartOption} from "echarts";
 import {getCategoryById, getRecords, getRecordsByTime} from "@/store/utils";

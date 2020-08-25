@@ -33,7 +33,6 @@ import CategoryList from "./common/CategoryList.vue";
 import NumberPad from "./common/NumberPad.vue";
 import CalcStrBar from "./common/CalcStrBar.vue";
 import CalcPad from "@/views/record/common/withCalc";
-import {Category, IndexedMoneyRecord, MoneyRecord, MoneyType} from '@/store/modules/module-types';
 
 import {Action, Getter, State,} from 'vuex-class'
 

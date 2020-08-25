@@ -20,7 +20,6 @@ import TopBar from "@/components/TopBar.vue";
 import Icon from "@/components/Icon/Icon.vue";
 import IconList from "@/views/catagory/IconList.vue";
 import CategoryInfo from "@/views/catagory/CategoryInfo.vue";
-import {Category} from "@/store/modules/module-types";
 import {Action, Getter, State} from "vuex-class";
 
 @Component({
