@@ -1,5 +1,5 @@
-import {ComponentOptions, CreateElement} from "vue";
-import {Vue, Component, Model, Watch, Prop} from 'vue-property-decorator';
+import {CreateElement} from "vue";
+import {Vue, Component, Watch, Prop} from 'vue-property-decorator';
 import NumberPad from "@/views/record/common/NumberPad.vue";
 
 type Operator = '+' | '-'
@@ -78,9 +78,15 @@ function withCalc(Comp?: any) {
       }
     }
     handleClear() {
-      this.left = '0'
-      this.right = ''
-      this.operator = ''
+      if (this.right) {
+        this.right = this.right.slice(0, -1)
+      } else if (this.operator) {
+        this.operator = ''
+      } else if (this.left.length > 1) {
+        this.left = this.left.slice(0, -1)
+      } else {
+        this.left = '0'
+      }
     }
     handleSubmit() {
       this.getCalcResult()
@@ -92,7 +98,7 @@ function withCalc(Comp?: any) {
       this.$emit('update:date', d)
     }
     render(h: CreateElement) {
-      return h('number-pad', {
+      return h(Comp, {
         props: {
           showEqual: this.operator.length !== 0,
           date: this.date
