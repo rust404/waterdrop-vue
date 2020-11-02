@@ -1,7 +1,10 @@
 import {MutationTree, Module, ActionTree, GetterTree} from "vuex";
 import {generateRecordId, saveMaxRecordId} from "@/store/utils/generateRecordId";
-import {getRecords, getRecordsByTime} from "@/store/utils";
+import {getKeyByPrefix, getRecords, getRecordsByTime} from "@/store/utils";
 import dayjs from "dayjs";
+import {PREFIX} from "@/store/constants";
+
+const KEY = getKeyByPrefix(PREFIX, 'records')
 
 const state: MoneyRecordState = {
   recordList: [],
@@ -88,10 +91,10 @@ const actions: ActionTree<MoneyRecordState, {}> = {
     dispatch('save')
   },
   save({state}) {
-    window.localStorage.setItem('records', JSON.stringify(state.recordList))
+    window.localStorage.setItem(KEY, JSON.stringify(state.recordList))
   },
   load({state, dispatch}) {
-    const list = JSON.parse(window.localStorage.getItem('records') || '[]')
+    const list = JSON.parse(window.localStorage.getItem(KEY) || '[]')
     if (list.length > 0) {
       state.recordList = list
       return

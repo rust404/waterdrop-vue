@@ -30,10 +30,15 @@ function getCategories(categories: IndexedCategory[], option: Partial<IndexedCat
   })
 }
 
+function getKeyByPrefix(prefix = '', key: string) {
+  return prefix + '_' + key
+}
+
 
 export {
   getRecordsByTime,
   getCategoryById,
   getRecords,
   getCategories,
+  getKeyByPrefix
 }

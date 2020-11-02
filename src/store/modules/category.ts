@@ -1,7 +1,9 @@
 import {MutationTree, Module, ActionTree, GetterTree} from "vuex";
 import {generateCategoryId, saveMaxCategoryId} from "@/store/utils/generateCategoryId";
-import {getCategories, getCategoryById} from "@/store/utils";
+import {getCategories, getCategoryById, getKeyByPrefix} from "@/store/utils";
+import {PREFIX} from "@/store/constants";
 
+const KEY = getKeyByPrefix(PREFIX, 'categories')
 const defaultCategoryList: Omit<Category, 'id'>[] = [
   {
     name: "餐饮",
@@ -82,10 +84,10 @@ const actions: ActionTree<CategoryState, {}> = {
     dispatch('save')
   },
   save({state}) {
-    window.localStorage.setItem('categories', JSON.stringify(state.categoryList))
+    window.localStorage.setItem(KEY, JSON.stringify(state.categoryList))
   },
   load({state, dispatch}) {
-    const list = JSON.parse(window.localStorage.getItem('categories') || '[]')
+    const list = JSON.parse(window.localStorage.getItem(KEY) || '[]')
     if (list.length > 0) {
       state.categoryList = list
       return
