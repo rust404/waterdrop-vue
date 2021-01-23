@@ -1,7 +1,7 @@
 interface Category {
   name: string;
   icon: string;
-  id: number;
+  id: string;
   moneyType: MoneyType;
 }
 
@@ -14,8 +14,8 @@ type MoneyType = "income" | "expenditure";
 interface MoneyRecord {
   createAt: string;
   moneyType: MoneyType;
-  categoryId: number;
-  id: number;
+  categoryId: string;
+  id: string;
   amount: number;
 }
 
@@ -30,3 +30,9 @@ interface CategoryState {
 interface MoneyRecordState {
   recordList: MoneyRecord[];
 }
+
+type RootState = {
+  category: CategoryState;
+  record: MoneyRecordState;
+}
+

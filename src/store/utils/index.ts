@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import {v4 as uuid} from "uuid";
 
 function getRecordsByTime(records: MoneyRecord[], time: Date, unit: dayjs.UnitType) {
   return records.filter(record => {
@@ -16,7 +17,7 @@ function getRecords(records: IndexedMoneyRecord[], option: Partial<IndexedMoneyR
   })
 }
 
-function getCategoryById(categories: Category[], id: number) {
+function getCategoryById(categories: Category[], id: string) {
   return categories.filter(category => category.id === id)[0]
 }
 
@@ -34,8 +35,10 @@ function getKeyByPrefix(prefix = '', key: string) {
   return prefix + '_' + key
 }
 
+const generateId = (prefix = '') => prefix + uuid()
 
 export {
+  generateId,
   getRecordsByTime,
   getCategoryById,
   getRecords,

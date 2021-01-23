@@ -58,12 +58,12 @@ export default class RecordAdd extends Vue {
   @Getter('record/getRecords') readonly getRecords!: (option: Partial<IndexedMoneyRecord>) => MoneyRecord[]
 
   moneyType: MoneyType = 'expenditure'
-  selectedId = -1
+  selectedId = ''
   curDate: Date = new Date
   calcStr = ''
 
   created() {
-    const record = this.getRecords({id: Number(this.$route.params.id)})[0]
+    const record = this.getRecords({id: this.$route.params.id})[0]
     if (!record) {
       this.$router.push('/')
       return
@@ -89,7 +89,7 @@ export default class RecordAdd extends Vue {
   }
 
   validate() {
-    if (this.selectedId === -1) {
+    if (this.selectedId === '') {
       this.$message({type: 'warning', message: '分类不能为空'})
       return false
     } else if (this.calcStr === '0') {
@@ -107,7 +107,7 @@ export default class RecordAdd extends Vue {
       return
     }
     this.editRecord({
-      id: parseInt(this.$route.params.id),
+      id: this.$route.params.id,
       moneyType: this.moneyType,
       categoryId: this.selectedId,
       amount: +this.calcStr,

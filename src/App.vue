@@ -12,14 +12,11 @@
 
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator'
-import {Action} from "vuex-class";
 import PopUp from "@/components/PopUp.vue";
 @Component({
   components: {PopUp}
 })
 export default class App extends Vue {
-  @Action('category/load') readonly loadCategory!: Function
-  @Action('record/load') readonly loadRecord!: Function
   transitionName = ''
   pathHistories: string[] = [this.$route.path]
   showQrcode = false
@@ -48,11 +45,6 @@ export default class App extends Vue {
       }
       next()
     })
-  }
-
-  mounted() {
-    this.loadCategory()
-    this.loadRecord()
   }
 }
 </script>

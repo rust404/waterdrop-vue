@@ -59,7 +59,7 @@ export default class RecordAdd extends Vue {
   @Getter('category/getCategories') readonly getCategories!: (option: Partial<IndexedCategory>) => Category[]
 
   moneyType: MoneyType = 'expenditure'
-  selectedId = -1
+  selectedId = ''
   calcStr = '0'
   curDate = new Date()
 
@@ -72,7 +72,7 @@ export default class RecordAdd extends Vue {
     this.$router.push('/category/manage')
   }
   validate() {
-    if (this.selectedId === -1) {
+    if (this.selectedId === '') {
       this.$message({type: 'warning', message: '分类不能为空'})
       return false
     } else if (this.calcStr === '0') {

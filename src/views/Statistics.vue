@@ -53,8 +53,8 @@ import {State} from "vuex-class";
 import {EChartOption} from "echarts";
 import {getCategoryById, getRecords, getRecordsByTime} from "@/store/utils";
 
-type CategoryToRecordsMap = { [categoryId: number]: MoneyRecord[] }
-type CategoryToSumMap = { [categoryId: number]: number }
+type CategoryToRecordsMap = { [categoryId: string]: MoneyRecord[] }
+type CategoryToSumMap = { [categoryId: string]: number }
 
 const monthArr = Array(12).fill(0).map((_, index) => index + 1)
 
@@ -109,7 +109,7 @@ export default class Statistics extends Vue {
     ret.sort((a, b) => b[1] - a[1])
     return ret.map(item => {
       return {
-        category: getCategoryById(this.categoryList, parseInt(item[0])),
+        category: getCategoryById(this.categoryList, item[0]),
         sum: item[1],
         percent: item[1] / total * 100
       }
@@ -246,7 +246,7 @@ export default class Statistics extends Vue {
     }
 
     const map = getCategoryToRecordMap(records)
-    const ret: { [categoryId: number]: number } = {}
+    const ret: { [categoryId: string]: number } = {}
     for (const i in map) {
       if (!Object.prototype.hasOwnProperty.call(map, i)) continue
       ret[i] = map[i].reduce((acc, record) => acc + record.amount, 0)

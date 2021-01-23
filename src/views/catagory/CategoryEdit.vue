@@ -34,11 +34,11 @@ import {Action, Getter, State} from "vuex-class";
 export default class CategoryEdit extends Vue {
   @State(state => state.category.categoryList) readonly categoryList!: Category[]
   @Action('category/edit') readonly categoryEdit!: (payload: Pick<Category, "id"> & Partial<Omit<Category, "id">>) => void
-  @Getter('category/getCategoryById') readonly getCategoryById!: (id: number) => Category
+  @Getter('category/getCategoryById') readonly getCategoryById!: (id: string) => Category
   categoryName = ''
   categoryIcon = ''
   created() {
-    const category = this.getCategoryById(Number(this.$route.params.id))
+    const category = this.getCategoryById(this.$route.params.id)
     if (!category) {
       this.$router.push('/')
     }
@@ -48,7 +48,7 @@ export default class CategoryEdit extends Vue {
   handleFinished() {
     if (!this.validate()) return
     this.categoryEdit({
-      id: Number(this.$route.params.id),
+      id: this.$route.params.id,
       icon: this.categoryIcon,
       name: this.categoryName
     })

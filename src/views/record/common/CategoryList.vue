@@ -47,7 +47,7 @@ import Icon from '@/components/Icon/Icon.vue';
   }
 })
 export default class CategoryList extends Vue {
-  @Model('change', { type: Number }) readonly selectedCategoryId!: number;
+  @Model('change', { type: String }) readonly selectedCategoryId!: string;
   @Prop(Array) readonly listData!: Category[];
   @Prop({type: String}) readonly type?: 'manage' | 'add'
 
@@ -57,7 +57,7 @@ export default class CategoryList extends Vue {
       'is-active': this.selectedCategoryId === category.id
     }
   }
-  handleClick(id: number) {
+  handleClick(id: string) {
     this.$emit('change', id)
   }
   handleManage() {

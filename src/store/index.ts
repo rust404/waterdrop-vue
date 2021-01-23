@@ -1,17 +1,24 @@
 import Vue from "vue";
 import Vuex, { StoreOptions } from "vuex";
 
-import { category } from "./modules/category";
-import { record } from "./modules/record";
+import {category, saveCategories} from "./modules/category";
+import {record, saveRecords} from "./modules/record";
 
 Vue.use(Vuex);
 
-const store: StoreOptions<{}> = {
-  state: {},
+const storeConfig: StoreOptions<RootState> = {
   modules: {
     category,
     record,
   },
 };
 
-export default new Vuex.Store(store);
+const store = new Vuex.Store(storeConfig);
+
+store.subscribe((mutation, state) => {
+  console.log(mutation, state)
+  saveRecords(state.record.recordList)
+  saveCategories(state.category.categoryList)
+})
+
+export default store
